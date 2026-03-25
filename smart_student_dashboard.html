@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scholar Atelier Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1f2a37;
+    --muted: #6b7280;
+    --teal: #1f7a72;
+    --sage: #88a889;
+    --gold: #d4a44e;
+    --coral: #c65a3f;
+    --violet: #7866d7;
+    --paper: rgba(255, 252, 247, 0.8);
+    --line: rgba(31, 42, 55, 0.1);
+    --shadow: 0 24px 70px rgba(63, 46, 28, 0.14);
+    --px: 72%;
+    --py: 18%;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    min-height: 100vh;
+    overflow-x: hidden;
+    color: var(--ink);
+    font-family: "Manrope", sans-serif;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(208, 226, 211, 0.72), transparent 26%),
+      radial-gradient(circle at 88% 16%, rgba(242, 219, 197, 0.78), transparent 24%),
+      radial-gradient(circle at 62% 78%, rgba(226, 219, 249, 0.52), transparent 28%),
+      linear-gradient(135deg, #f6f0e8 0%, #f2ede5 46%, #eee6da 100%);
+  }
+
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::before {
+    background:
+      radial-gradient(circle at var(--px) var(--py), rgba(255, 255, 255, 0.72), transparent 18%),
+      linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: auto, 32px 32px, 32px 32px;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.35));
+  }
+
+  body::after {
+    inset: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.44);
+    border-radius: 34px;
+  }
+
+  body:not(.logged-in) .app {
+    display: none;
+  }
+
+  body.logged-in .login-shell {
+    display: none;
+  }
+
+  .login-shell {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+  }
+
+  .login-card {
+    width: min(980px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: 18px;
+    padding: 20px;
+    border-radius: 34px;
+  }
+
+  .login-panel,
+  .login-form-wrap {
+    padding: 24px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.66);
+    border: 1px solid var(--line);
+  }
+
+  .login-panel h1 {
+    margin: 0.45rem 0 0.8rem;
+    font-family: "Fraunces", serif;
+    font-size: clamp(2.2rem, 4vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+
+  .login-panel h1 span {
+    color: var(--teal);
+  }
+
+  .login-panel p,
+  .login-form-wrap p,
+  .login-item span,
+  .helper-text,
+  .login-error {
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .login-stack,
+  .login-form,
+  .login-list,
+  .demo-row {
+    display: grid;
+    gap: 14px;
+  }
+
+  .login-list {
+    margin-top: 18px;
+  }
+
+  .login-item {
+    padding: 16px 18px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--line);
+  }
+
+  .login-item strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+
+  .login-form-wrap h2 {
+    font-family: "Fraunces", serif;
+    font-size: 1.8rem;
+    letter-spacing: -0.03em;
+  }
+
+  .field {
+    display: grid;
+    gap: 8px;
+  }
+
+  .field label {
+    color: var(--muted);
+    font: 500 0.72rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .field input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.82);
+    color: var(--ink);
+    font: inherit;
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s;
+  }
+
+  .field input:focus {
+    border-color: rgba(31, 122, 114, 0.32);
+    box-shadow: 0 0 0 4px rgba(31, 122, 114, 0.08);
+  }
+
+  .helper-text {
+    font-size: 0.92rem;
+  }
+
+  .demo-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .demo-chip {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--ink);
+    border-radius: 18px;
+    padding: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.18s;
+  }
+
+  .demo-chip:hover {
+    transform: translateY(-2px);
+    border-color: rgba(31, 122, 114, 0.22);
+  }
+
+  .demo-chip strong,
+  .demo-chip span {
+    display: block;
+  }
+
+  .demo-chip span {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+
+  .login-error {
+    min-height: 1.5rem;
+    color: var(--coral);
+    font-size: 0.92rem;
+  }
+
+  body.logged-in.student-mode .app {
+    grid-template-columns: 1fr;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  body.logged-in.student-mode .rail,
+  body.logged-in.student-mode .meter,
+  body.logged-in.student-mode #actions,
+  body.logged-in.student-mode .table-wrap,
+  body.logged-in.student-mode .reg-tools {
+    display: none;
+  }
+
+  body.logged-in.student-mode .hero-grid,
+  body.logged-in.student-mode .registry-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.logged-in.student-mode .panel-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+
+  body.logged-in.student-mode .signals {
+    grid-template-columns: 1fr;
+  }
+
+  body.logged-in.student-mode .signal-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 104px minmax(0, 1fr);
+    gap: 22px;
+    min-height: 100vh;
+    padding: 22px;
+  }
+
+  .glass {
+    background: var(--paper);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(18px);
+    box-shadow: var(--shadow);
+  }
+
+  .eyebrow {
+    color: var(--muted);
+    font: 500 0.72rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .fade {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .rail {
+    position: sticky;
+    top: 22px;
+    align-self: start;
+    min-height: calc(100vh - 44px);
+    border-radius: 28px;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .brand {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 6px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font: 700 1.2rem "Fraunces", serif;
+    background: linear-gradient(135deg, rgba(31, 122, 114, 0.18), rgba(212, 164, 78, 0.18)), #fffdf7;
+  }
+
+  .rail nav {
+    display: grid;
+    gap: 10px;
+  }
+
+  .rail a {
+    color: var(--muted);
+    text-decoration: none;
+    text-align: center;
+    padding: 12px 8px;
+    border-radius: 18px;
+    display: grid;
+    gap: 4px;
+    transition: 0.18s;
+  }
+
+  .rail a:hover,
+  .rail a.active {
+    color: var(--ink);
+    background: rgba(31, 122, 114, 0.09);
+    transform: translateY(-2px);
+  }
+
+  .rail a b { font-size: 1.1rem; }
+  .rail a span {
+    font: 500 0.66rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .rail-note {
+    margin-top: auto;
+    padding: 14px;
+    border-top: 1px solid rgba(31, 42, 55, 0.08);
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .main { display: grid; gap: 22px; min-width: 0; }
+
+  .topbar,
+  .hero,
+  .meter,
+  .panel,
+  .registry {
+    border-radius: 30px;
+    padding: 22px;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .title h1,
+  .hero h2,
+  .panel h3,
+  .registry h3 {
+    font-family: "Fraunces", serif;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+
+  .title h1 {
+    font-size: clamp(1.6rem, 2vw, 2.2rem);
+    margin: 0.35rem 0;
+  }
+
+  .title h1 span,
+  .hero h2 span { color: var(--teal); }
+
+  .title p,
+  .hero p,
+  .panel p,
+  .registry p,
+  .note,
+  .slot span,
+  .action span,
+  .metric span {
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .top-tools {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .pill,
+  .tag,
+  .risk,
+  .grade {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font: 500 0.72rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .live {
+    background: rgba(31, 122, 114, 0.1);
+    color: var(--teal);
+  }
+
+  .live::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 0 rgba(31, 122, 114, 0.22);
+    animation: pulse 2.2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(31, 122, 114, 0.22); }
+    70% { box-shadow: 0 0 0 12px rgba(31, 122, 114, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(31, 122, 114, 0); }
+  }
+
+  .clock {
+    padding: 10px 14px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--line);
+  }
+
+  .clock strong { display: block; }
+  .clock span { color: var(--muted); font-size: 0.88rem; }
+
+  .btn {
+    border: none;
+    cursor: pointer;
+    color: #f7fcfb;
+    font-weight: 700;
+    padding: 13px 18px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--teal), #2f9b92);
+    box-shadow: 0 14px 28px rgba(31, 122, 114, 0.24);
+    transition: 0.18s;
+  }
+
+  .btn:hover { transform: translateY(-2px); }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr);
+    gap: 22px;
+  }
+
+  .hero,
+  .meter,
+  .panel,
+  .registry {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before,
+  .meter::before,
+  .panel::before,
+  .registry::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.34), transparent 42%);
+    pointer-events: none;
+  }
+
+  .hero {
+    display: grid;
+    gap: 22px;
+    background:
+      radial-gradient(circle at 100% 0%, rgba(31, 122, 114, 0.12), transparent 28%),
+      radial-gradient(circle at 18% 100%, rgba(212, 164, 78, 0.16), transparent 34%),
+      var(--paper);
+  }
+
+  .hero-top,
+  .head,
+  .reg-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .hero h2 {
+    font-size: clamp(2.3rem, 4.2vw, 4.2rem);
+    max-width: 34rem;
+  }
+
+  .switch,
+  .filters {
+    display: inline-flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .switch {
+    padding: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid var(--line);
+  }
+
+  .switch button,
+  .filters button {
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    background: transparent;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font: 500 0.72rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: 0.18s;
+  }
+
+  .switch button.active,
+  .filters button.active {
+    color: var(--ink);
+    background: #fffaf4;
+    box-shadow: inset 0 0 0 1px rgba(31, 42, 55, 0.12), 0 8px 22px rgba(79, 56, 25, 0.08);
+  }
+
+  .metrics,
+  .signals,
+  .panel-grid,
+  .chart-metrics,
+  .stats,
+  .registry-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .metrics {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .metric,
+  .story,
+  .signal-list,
+  .chart-box,
+  .table-wrap,
+  .planner,
+  .pulse,
+  .action,
+  .stat,
+  .mini {
+    padding: 18px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid var(--line);
+  }
+
+  .metric {
+    transition: 0.18s;
+  }
+
+  .metric:hover {
+    transform: translateY(-3px);
+    border-color: rgba(31, 122, 114, 0.24);
+  }
+
+  .metric small,
+  .stat small,
+  .mini small {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font: 500 0.7rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .metric strong {
+    display: block;
+    font-size: clamp(1.7rem, 2.2vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .signals {
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  }
+
+  .signal-list,
+  .priorities,
+  .actions,
+  .slots,
+  .pulse-grid,
+  .spot {
+    display: grid;
+    gap: 12px;
+  }
+
+  .signal-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .signal-item strong,
+  .pulse strong,
+  .action strong,
+  .slot strong {
+    display: block;
+    font-size: 0.98rem;
+  }
+
+  .signal-item em,
+  .signal-item span {
+    color: var(--muted);
+    font-style: normal;
+    font-size: 0.88rem;
+  }
+
+  .meter {
+    display: grid;
+    gap: 16px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(120, 102, 215, 0.12), transparent 38%),
+      radial-gradient(circle at 110% 100%, rgba(31, 122, 114, 0.12), transparent 42%),
+      var(--paper);
+  }
+
+  .meter-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .badge-ok {
+    background: rgba(31, 122, 114, 0.1);
+    color: var(--teal);
+  }
+
+  .badge-mid {
+    background: rgba(212, 164, 78, 0.16);
+    color: #986400;
+  }
+
+  .badge-hi {
+    background: rgba(198, 90, 63, 0.14);
+    color: var(--coral);
+  }
+
+  .ring {
+    position: relative;
+    width: min(100%, 280px);
+    aspect-ratio: 1;
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+  }
+
+  .ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .ring-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+
+  .ring-label strong {
+    font-size: 3rem;
+    letter-spacing: -0.08em;
+  }
+
+  .ring-label span {
+    color: var(--muted);
+    font: 500 0.78rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .delta {
+    margin: 0 auto;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(31, 122, 114, 0.1);
+    color: var(--teal);
+    font: 500 0.72rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .panel-grid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(340px, 1fr) minmax(280px, 0.86fr);
+    gap: 22px;
+  }
+
+  .panel {
+    display: grid;
+    gap: 16px;
+  }
+
+  .registry {
+    display: grid;
+    gap: 18px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+
+  .legend i {
+    width: 18px;
+    height: 6px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+  }
+
+  .chart-metrics,
+  .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .stat,
+  .mini {
+    padding: 14px;
+    border-radius: 18px;
+  }
+
+  .stat strong,
+  .mini strong {
+    font-size: 1.2rem;
+  }
+
+  .person {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 24px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font: 700 1.5rem "Fraunces", serif;
+    box-shadow: 0 18px 32px rgba(31, 122, 114, 0.18);
+  }
+
+  .person h4 {
+    font-size: 1.45rem;
+    letter-spacing: -0.03em;
+  }
+
+  .person p { color: var(--muted); }
+
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid var(--line);
+  }
+
+  .subject {
+    display: grid;
+    gap: 10px;
+  }
+
+  .subject-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.9rem;
+  }
+
+  .track {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(31, 42, 55, 0.08);
+    overflow: hidden;
+  }
+
+  .fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .reg-tools {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search {
+    flex: 1;
+    min-width: 240px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.74);
+    border: 1px solid var(--line);
+  }
+
+  .search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--ink);
+    padding: 14px 0;
+    font: inherit;
+  }
+
+  .search input::placeholder { color: #9aa3b2; }
+
+  .registry-grid {
+    grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.82fr);
+    gap: 18px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    padding: 15px 18px;
+    text-align: left;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+    font: 500 0.74rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(31, 42, 55, 0.07);
+    font-size: 0.95rem;
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    cursor: pointer;
+    transition: 0.18s;
+  }
+
+  tbody tr:hover {
+    background: rgba(31, 122, 114, 0.05);
+  }
+
+  tbody tr.active {
+    background:
+      linear-gradient(90deg, rgba(31, 122, 114, 0.12), transparent 72%),
+      rgba(255, 255, 255, 0.86);
+  }
+
+  .student {
+    display: grid;
+    gap: 4px;
+  }
+
+  .student span,
+  .muted {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  .risk.low,
+  .grade.a {
+    background: rgba(31, 122, 114, 0.1);
+    color: var(--teal);
+  }
+
+  .risk.medium,
+  .grade.b {
+    background: rgba(212, 164, 78, 0.16);
+    color: #986400;
+  }
+
+  .risk.high,
+  .grade.c {
+    background: rgba(198, 90, 63, 0.14);
+    color: var(--coral);
+  }
+
+  .planner h4 {
+    font-family: "Fraunces", serif;
+    font-size: 1.34rem;
+    letter-spacing: -0.03em;
+  }
+
+  .planner {
+    display: grid;
+    gap: 16px;
+  }
+
+  .mentor {
+    padding: 16px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(225, 220, 247, 0.58), rgba(255, 255, 255, 0.78));
+    border: 1px solid rgba(120, 102, 215, 0.14);
+  }
+
+  .mentor p {
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .pulse span {
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .slot {
+    padding: 14px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid var(--line);
+  }
+
+  .empty {
+    padding: 26px 16px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  @media (max-width: 1260px) {
+    .app,
+    .hero-grid,
+    .panel-grid,
+    .signals,
+    .metrics,
+    .chart-metrics,
+    .stats,
+    .registry-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rail {
+      position: static;
+      min-height: auto;
+    }
+
+    .rail nav {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      overflow: auto;
+    }
+
+    .rail-note {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }
+
+    .login-card,
+    .demo-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 780px) {
+    body::after {
+      inset: 10px;
+      border-radius: 24px;
+    }
+
+    .app {
+      padding: 12px;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+
+    .rail,
+    .topbar,
+    .hero,
+    .meter,
+    .panel,
+    .registry {
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    .rail nav {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .top-tools {
+      width: 100%;
+    }
+
+    .clock,
+    .btn {
+      flex: 1 1 auto;
+    }
+
+    .hero h2 {
+      font-size: 2.4rem;
+    }
+
+    .login-shell {
+      padding: 14px;
+    }
+
+    .login-card,
+    .login-panel,
+    .login-form-wrap {
+      padding: 18px;
+      border-radius: 24px;
+    }
+
+    body.logged-in.student-mode .signal-list {
+      grid-template-columns: 1fr;
+    }
+
+    thead {
+      display: none;
+    }
+
+    table,
+    tbody,
+    tr,
+    td {
+      display: block;
+      width: 100%;
+    }
+
+    td {
+      padding: 8px 16px;
+      border-bottom: none;
+    }
+
+    td::before {
+      content: attr(data-label);
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font: 500 0.68rem "IBM Plex Mono", monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+  }
+</style>
+</head>
+<body>
+<section class="login-shell">
+  <div class="login-card glass">
+    <div class="login-panel">
+      <div class="eyebrow">Student Login</div>
+      <h1><span>Scholar</span> access through USN and date of birth.</h1>
+      <p>This version is simplified to feel cleaner and more focused. Once signed in, the dashboard centers on the student's own progress, subjects, and day plan.</p>
+      <div class="login-list">
+        <div class="login-item"><strong>Cleaner layout</strong><span>Less visual clutter, fewer competing panels, and a more direct academic summary.</span></div>
+        <div class="login-item"><strong>Personal view</strong><span>The page opens into a student-facing dashboard instead of a broad admin control room.</span></div>
+        <div class="login-item"><strong>Quick access</strong><span>Use USN and date of birth, or tap one of the demo students below to prefill the form.</span></div>
+      </div>
+    </div>
+
+    <div class="login-form-wrap">
+      <div class="login-stack">
+        <div class="eyebrow">Secure Entry</div>
+        <h2>Sign in to your dashboard</h2>
+        <p>Enter your `USN` and `Date of Birth` to continue.</p>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <div class="field">
+          <label for="usnInput">USN</label>
+          <input id="usnInput" name="usn" type="text" autocomplete="username" placeholder="Enter your USN" required>
+        </div>
+        <div class="field">
+          <label for="dobInput">Date Of Birth</label>
+          <input id="dobInput" name="dob" type="date" autocomplete="bday" required>
+        </div>
+        <button class="btn" type="submit">Login to dashboard</button>
+      </form>
+
+      <div class="helper-text">Demo accounts for testing:</div>
+      <div class="demo-row">
+        <button class="demo-chip" type="button" data-usn="S1042" data-dob="2005-04-12"><strong>Krishnan</strong><span>4MC23CS001 - 2005-04-12</span></button>
+        <button class="demo-chip" type="button" data-usn="S1091" data-dob="2004-11-03"><strong>Priya Nair</strong><span>4MC23CS002 - 2004-11-03</span></button>
+        <button class="demo-chip" type="button" data-usn="S1034" data-dob="2004-08-19"><strong>Vikram Sinha</strong><span>4MC23CS003 - 2004-08-19</span></button>
+      </div>
+      <div class="login-error" id="loginError"></div>
+    </div>
+  </div>
+</section>
+
+<div class="app">
+  <aside class="rail glass fade">
+    <div class="brand">AS</div>
+    <nav>
+      <a class="active" href="#overview"><b>01</b><span>Overview</span></a>
+      <a href="#trajectory"><b>02</b><span>Trajectory</span></a>
+      <a href="#spotlight"><b>03</b><span>Focus</span></a>
+      <a href="#actions"><b>04</b><span>Action</span></a>
+      <a href="#registry"><b>05</b><span>Registry</span></a>
+      <a href="#planner"><b>06</b><span>Planner</span></a>
+    </nav>
+    <div class="rail-note">Elegant student intelligence dashboard with a lighter editorial style and linked interactions.</div>
+  </aside>
+
+  <main class="main">
+    <section class="topbar glass fade">
+      <div class="title">
+        <div class="eyebrow">Student Intelligence Atelier</div>
+        <h1 id="dashboardTitle"><span>Scholar</span> dashboard with a calmer visual language</h1>
+        <p id="dashboardIntro">The original neon-dark direction has been rebuilt into a bright planning studio with shared state across overview, spotlight, chart, roster, and schedule panels.</p>
+      </div>
+      <div class="top-tools">
+        <div class="pill live">Live review lane</div>
+        <div class="clock"><strong id="clockTime">09:30 AM</strong><span id="clockDate">Wednesday, March 25</span></div>
+        <button class="btn" id="nextBtn" type="button">Log out</button>
+      </div>
+    </section>
+
+    <section class="hero-grid" id="overview">
+      <article class="hero glass fade" style="animation-delay:.08s">
+        <div class="hero-top">
+          <div>
+            <div class="eyebrow">Overview</div>
+            <h2 id="heroTitle">From <span>raw alerts</span> to calm academic direction.</h2>
+            <p id="rangeStory">This month shows steadier attendance, earlier mentor follow-up, and fewer surprise drops across the watchlist cohort.</p>
+          </div>
+          <div class="switch">
+            <button class="range active" data-range="30d" type="button">30 Days</button>
+            <button class="range" data-range="90d" type="button">90 Days</button>
+            <button class="range" data-range="180d" type="button">180 Days</button>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><small id="metricLabel1">Active learners</small><strong id="mLearners">0</strong><span id="metricNote1">Across all tracked departments</span></div>
+          <div class="metric"><small id="metricLabel2">Readiness index</small><strong id="mReady">0</strong><span id="metricNote2">Mastery, rhythm, and wellbeing</span></div>
+          <div class="metric"><small id="metricLabel3">Attendance confidence</small><strong id="mAttend">0</strong><span id="metricNote3">Signal quality for intervention timing</span></div>
+          <div class="metric"><small id="metricLabel4">Intervention momentum</small><strong id="mMoves">0</strong><span id="metricNote4">Coach touches closed this cycle</span></div>
+        </div>
+        <div class="signals">
+          <div class="story">
+            <div class="eyebrow">What changed</div>
+            <h3 id="storyTitle">Earlier interventions are landing before assessment week.</h3>
+            <p id="storyBody">Watchlist learners now receive outreach earlier, reducing reactive escalations and creating more stable recovery.</p>
+          </div>
+          <div class="signal-list" id="signalList"></div>
+        </div>
+      </article>
+
+      <article class="meter glass fade" style="animation-delay:.16s">
+        <div class="meter-head">
+          <div><div class="eyebrow">Cohort compass</div><h3>Academic poise meter</h3></div>
+          <div class="pill badge-ok" id="meterLabel">Stable horizon</div>
+        </div>
+        <div class="ring">
+          <svg viewBox="0 0 240 240" aria-hidden="true">
+            <circle cx="120" cy="120" r="86" fill="none" stroke="rgba(31,42,55,.08)" stroke-width="16"></circle>
+            <circle id="meterArc" cx="120" cy="120" r="86" fill="none" stroke="url(#grad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="540" stroke-dashoffset="540"></circle>
+            <defs>
+              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1f7a72"></stop>
+                <stop offset="100%" stop-color="#d4a44e"></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="ring-label"><div><strong id="meterScore">0</strong><span>Cohort score</span></div></div>
+        </div>
+        <div class="delta" id="meterDelta">+0.0 trend shift</div>
+        <div class="priorities" id="priorityList"></div>
+      </article>
+    </section>
+
+    <section class="panel-grid">
+      <article class="panel glass fade" id="trajectory" style="animation-delay:.24s">
+        <div class="head">
+          <div><div class="eyebrow">Trajectory lab</div><h3 id="trajectoryTitle">Campus vs selected learner</h3><p id="chartText">The selected learner is moving in step with a healthier campus baseline.</p></div>
+          <div class="legend"><span><i style="background:#88a889"></i>Campus pulse</span><span><i style="background:#d4a44e"></i>Selected learner</span></div>
+        </div>
+        <div class="chart-box"><canvas id="chart" height="280"></canvas></div>
+        <div class="chart-metrics">
+          <div class="stat"><small id="cLabel1">Attendance drift</small><strong id="cAttend">+1.8 pts</strong></div>
+          <div class="stat"><small id="cLabel2">Risk compression</small><strong id="cRisk">-6 alerts</strong></div>
+          <div class="stat"><small id="cLabel3">Engagement lift</small><strong id="cEngage">+4.1 pts</strong></div>
+        </div>
+      </article>
+
+      <article class="panel glass fade" id="spotlight" style="animation-delay:.32s">
+        <div class="head"><div><div class="eyebrow">Learner spotlight</div><h3>Personal learning portrait</h3><p>Click any row in the registry and the spotlight, chart, and planner update together.</p></div></div>
+        <div class="spot" id="spot"></div>
+      </article>
+
+      <article class="panel glass fade" id="actions" style="animation-delay:.4s">
+        <div class="head"><div><div class="eyebrow">Action lane</div><h3>Intervention rhythm</h3><p>Next best actions appear as soon as the selected learner changes.</p></div></div>
+        <div class="pulse-grid" id="pulseGrid"></div>
+        <div class="actions" id="actionsList"></div>
+      </article>
+    </section>
+
+    <section class="registry glass fade" id="registry" style="animation-delay:.48s">
+      <div class="reg-head">
+        <div><div class="eyebrow">Registry</div><h3 id="registryTitle">Student roster with live filters</h3><p id="registryCount">6 learners available in the current studio view.</p></div>
+        <div class="reg-tools">
+          <label class="search"><span class="muted">Search</span><input id="search" type="search" placeholder="Search by learner or department"></label>
+          <div class="filters">
+            <button class="filter active" data-filter="all" type="button">All</button>
+            <button class="filter" data-filter="on-track" type="button">On Track</button>
+            <button class="filter" data-filter="watchlist" type="button">Watchlist</button>
+            <button class="filter" data-filter="critical" type="button">Critical</button>
+          </div>
+        </div>
+      </div>
+      <div class="registry-grid">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Learner</th><th>Department</th><th>Attendance</th><th>Prediction</th><th>Risk</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <div class="planner" id="planner">
+          <div><div class="eyebrow">Learning day map</div><h4 id="planTitle">Today for Krishnan</h4><p class="note" id="planSummary">Structured blocks reveal whether the learner needs practice time, mentor time, or simply a gentler cadence.</p></div>
+          <div class="mentor"><strong id="mentorName">Mentor: Prof. Meera Rao</strong><p id="mentorText">Focus on sustaining momentum while expanding challenge level in systems and applied problem solving.</p></div>
+          <div class="slots" id="slots"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+const students = [
+  {
+    id: "S1042",
+    name: "Krishnan",
+    dob: "2005-04-12",
+    dept: "Computer Science",
+    status: "on-track",
+    gpa: 9.1,
+    attendance: 96,
+    wellness: 88,
+    risk: 8,
+    pred: "A",
+    ready: 92,
+    mentor: "Prof. Meera Rao",
+    mentorNote: "Focus on sustaining momentum while expanding challenge level in systems and applied problem solving.",
+    action: "Nominate for peer tutoring in algorithms while protecting deep work blocks before finals.",
+    note: "High-achieving learner with stable attendance and strong collaborative habits.",
+    tags: ["peer lead", "project momentum", "fast synthesis"],
+    schedule: [["08:30", "Systems studio", "Prototype review and debugging sprint"], ["11:15", "Independent lab", "Focused DSA practice without interruptions"], ["14:00", "Mentor check-in", "Stretch goal planning for capstone"]],
+    subjects: [["Programming", 95, "#1f7a72"], ["DSA", 91, "#d4a44e"], ["DBMS", 87, "#7866d7"], ["Networks", 85, "#88a889"]],
+    trends: { "30d": [80, 82, 84, 83, 87, 90], "90d": [74, 76, 78, 79, 82, 86], "180d": [70, 72, 75, 77, 81, 85] }
+  },
+  {
+    id: "S1078",
+    name: "Rohan Mehta",
+    dob: "2005-02-26",
+    dept: "Electronics",
+    status: "watchlist",
+    gpa: 7.4,
+    attendance: 71,
+    wellness: 62,
+    risk: 58,
+    pred: "B",
+    ready: 69,
+    mentor: "Dr. Kavita Sen",
+    mentorNote: "Attendance dips are masking actual ability. Stabilize study rhythm before the next lab cycle.",
+    action: "Book two structured lab rehearsals and one attendance recovery conversation this week.",
+    note: "Learner shows concept retention but loses consistency during hardware-heavy weeks.",
+    tags: ["recoverable", "needs rhythm", "lab anxiety"],
+    schedule: [["09:00", "Circuit revision", "Short retrieval session before class"], ["12:00", "Attendance support block", "Counseling and daily planning reset"], ["15:30", "Embedded systems lab", "Practice checklist before assessment"]],
+    subjects: [["Circuits", 68, "#c65a3f"], ["Signals", 72, "#d4a44e"], ["Embedded", 65, "#7866d7"], ["VLSI", 62, "#88a889"]],
+    trends: { "30d": [63, 66, 67, 65, 69, 71], "90d": [60, 61, 64, 63, 66, 69], "180d": [58, 60, 61, 63, 65, 68] }
+  },
+  {
+    id: "S1091",
+    name: "Priya Nair",
+    dob: "2004-11-03",
+    dept: "Data Science",
+    status: "on-track",
+    gpa: 8.8,
+    attendance: 94,
+    wellness: 85,
+    risk: 12,
+    pred: "A",
+    ready: 89,
+    mentor: "Prof. Anand Iyer",
+    mentorNote: "Excellent analytical depth. Encourage broader presentation confidence during reviews.",
+    action: "Move from solo excellence toward peer presentation leadership during analytics sprint.",
+    note: "Consistently strong performer with a slight hesitation in collaborative presentation settings.",
+    tags: ["mentor ready", "clear upward arc", "modeling strength"],
+    schedule: [["08:45", "Statistics atelier", "Case-based inference discussion"], ["12:15", "Presentation rehearsal", "Refine narrative around model outputs"], ["16:00", "ML practicum", "Team review and tuning pass"]],
+    subjects: [["Statistics", 90, "#1f7a72"], ["Machine Learning", 93, "#d4a44e"], ["Python", 91, "#7866d7"], ["NLP", 85, "#88a889"]],
+    trends: { "30d": [78, 81, 82, 84, 86, 88], "90d": [72, 74, 77, 80, 83, 86], "180d": [68, 70, 73, 76, 80, 84] }
+  },
+  {
+    id: "S1034",
+    name: "Vikram Sinha",
+    dob: "2004-08-19",
+    dept: "Mechanical",
+    status: "critical",
+    gpa: 5.9,
+    attendance: 62,
+    wellness: 55,
+    risk: 84,
+    pred: "C",
+    ready: 51,
+    mentor: "Dr. Neel Bhat",
+    mentorNote: "Needs an immediate confidence rebuild and smaller, more frequent wins.",
+    action: "Create a same-day intervention plan with attendance support, workshop remediation, and guardian contact.",
+    note: "Performance is slipping across multiple modules. Recovery will depend on reducing overload and adding structure.",
+    tags: ["urgent", "mentor intensive", "confidence rebuild"],
+    schedule: [["09:30", "Faculty support hour", "One-to-one concept rescue on thermodynamics"], ["13:00", "Attendance recovery desk", "Reset next 10 days and remove friction"], ["16:30", "Workshop lab", "Guided task with simplified milestones"]],
+    subjects: [["Thermodynamics", 55, "#c65a3f"], ["Manufacturing", 63, "#d4a44e"], ["CAD", 57, "#7866d7"], ["Materials", 52, "#88a889"]],
+    trends: { "30d": [60, 58, 57, 55, 53, 52], "90d": [65, 63, 61, 58, 56, 54], "180d": [70, 67, 64, 61, 57, 54] }
+  },
+  {
+    id: "S1082",
+    name: "Kavya Reddy",
+    dob: "2005-01-14",
+    dept: "Biotechnology",
+    status: "on-track",
+    gpa: 8.5,
+    attendance: 91,
+    wellness: 87,
+    risk: 15,
+    pred: "A-",
+    ready: 87,
+    mentor: "Dr. Alok Menon",
+    mentorNote: "Fantastic consistency. Introduce more stretch assignments to avoid plateauing.",
+    action: "Move toward research-led projects with one deeper inquiry block each week.",
+    note: "Balanced profile with strong retention and calm pacing across lab-intensive work.",
+    tags: ["research ready", "calm pace", "strong retention"],
+    schedule: [["09:15", "Genetics seminar", "Discussion-led synthesis"], ["12:45", "Micro lab", "Structured observation and notes"], ["16:10", "Research extension", "Stretch task on immunology data"]],
+    subjects: [["Genetics", 91, "#1f7a72"], ["Microbiology", 89, "#d4a44e"], ["Biochemistry", 84, "#7866d7"], ["Immunology", 87, "#88a889"]],
+    trends: { "30d": [75, 77, 80, 82, 84, 86], "90d": [71, 73, 75, 78, 81, 84], "180d": [67, 69, 72, 75, 79, 82] }
+  },
+  {
+    id: "S1023",
+    name: "Rahul Gupta",
+    dob: "2004-09-07",
+    dept: "Mechanical",
+    status: "watchlist",
+    gpa: 7.2,
+    attendance: 79,
+    wellness: 70,
+    risk: 44,
+    pred: "B",
+    ready: 72,
+    mentor: "Dr. Neel Bhat",
+    mentorNote: "Solid practical instinct, but revision quality falls near assessments.",
+    action: "Add revision pacing and one mock response drill before the next test.",
+    note: "Moderate risk comes from uneven exam preparation, not from deep conceptual gaps.",
+    tags: ["close to lift", "revision cadence", "practical strength"],
+    schedule: [["09:10", "CAD recap", "Targeted refresh on previous errors"], ["13:10", "Workshop practice", "Small milestone-based tasking"], ["16:00", "Mock response drill", "Timed answer strategy run"]],
+    subjects: [["Thermodynamics", 70, "#c65a3f"], ["Manufacturing", 71, "#d4a44e"], ["CAD", 74, "#7866d7"], ["Materials", 69, "#88a889"]],
+    trends: { "30d": [67, 68, 70, 71, 72, 74], "90d": [64, 65, 67, 69, 71, 73], "180d": [60, 62, 65, 67, 70, 72] }
+  }
+];
+
+const ranges = {
+  "30d": {
+    learners: 2847, ready: 86, attendance: 92.4, moves: 73, score: 84, delta: "+4.2 trend shift",
+    label: "Stable horizon", badge: "badge-ok",
+    story: "This month shows steadier attendance, earlier mentor follow-up, and fewer surprise drops across the watchlist cohort.",
+    title: "Earlier interventions are landing before assessment week.",
+    body: "Watchlist learners now receive outreach a full planning block earlier, reducing reactive escalations and creating more stable recovery.",
+    chart: "The selected learner is moving in step with a healthier campus baseline and is benefiting from earlier academic support.",
+    att: "+1.8 pts", risk: "-6 alerts", eng: "+4.1 pts",
+    campus: [70, 72, 74, 76, 79, 81], labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
+    signals: [["#1f7a72", "Attendance clarity", "Signals are clean enough to intervene two days earlier.", "92.4%"], ["#d4a44e", "Mentor load", "Most high-risk cases already have named owners.", "14 open"], ["#7866d7", "Project confidence", "Submission cadence is improving in design-heavy teams.", "+9%"]],
+    pulses: [["Coach capacity", "Faculty mentors are closing feedback loops in 1.4 days on average, down from 2.1 days last cycle."], ["Assessment rhythm", "Project-led departments show calmer risk profiles when revision blocks happen 48 hours before evaluations."], ["Wellbeing pulse", "Low-friction check-ins are improving attendance stability more than generic reminder blasts."]]
+  },
+  "90d": {
+    learners: 2847, ready: 81, attendance: 89.2, moves: 184, score: 79, delta: "+6.8 quarter lift",
+    label: "Measured recovery", badge: "badge-mid",
+    story: "Quarter view shows a strong recovery story, but some departments still depend too heavily on last-minute rescue actions.",
+    title: "Quarter gains are real, but a few support loops still start too late.",
+    body: "Across the past quarter, recovery has improved for mid-risk learners, though critical cases still cluster where mentor contact begins after attendance slippage is obvious.",
+    chart: "Quarter data reveals a steadier climb, with the selected learner either amplifying or resisting the broader trend depending on support quality.",
+    att: "+3.5 pts", risk: "-14 alerts", eng: "+7.2 pts",
+    campus: [66, 68, 70, 73, 75, 78], labels: ["Oct", "Nov", "Dec", "Jan", "Feb", "Mar"],
+    signals: [["#1f7a72", "Recovery rate", "More watchlist learners are returning to stable status.", "61%"], ["#c65a3f", "Critical watch", "Mechanical and CS still carry the sharpest spikes.", "7 cases"], ["#7866d7", "Presentation lift", "Communication coaching raised confidence in data cohorts.", "+11%"]],
+    pulses: [["Coach capacity", "Case ownership is clear, but response time varies sharply between departments."], ["Assessment rhythm", "Quarterly reviews show the best results when prep is scaffolded across two weeks."], ["Wellbeing pulse", "Wellbeing dips often precede attendance declines by nearly one full academic block."]]
+  },
+  "180d": {
+    learners: 2847, ready: 76, attendance: 86.1, moves: 332, score: 74, delta: "+9.1 six-month lift",
+    label: "Long arc improving", badge: "badge-mid",
+    story: "Long-term data shows broad growth, yet the system still performs best when it treats attention, wellbeing, and mastery as one connected story.",
+    title: "The six-month arc rewards consistency more than intensity.",
+    body: "The healthiest departments are not simply the highest scoring ones; they are the ones combining strong pacing, visible support, and reliable follow-through over time.",
+    chart: "Over six months, sustained routines matter more than one-off pushes. The selected learner's arc makes that pattern easy to see.",
+    att: "+5.2 pts", risk: "-22 alerts", eng: "+10.4 pts",
+    campus: [61, 64, 67, 70, 73, 76], labels: ["Term 1", "Term 2", "Term 3", "Term 4", "Term 5", "Term 6"],
+    signals: [["#1f7a72", "Retention confidence", "Support systems are reducing sudden disengagement.", "94%"], ["#d4a44e", "Mentor continuity", "Consistency of follow-up remains the biggest differentiator.", "Strong"], ["#c65a3f", "Intervention debt", "Some critical learners still need more proactive planning.", "Moderate"]],
+    pulses: [["Coach capacity", "Long-view planning works best where mentors protect recurring support blocks."], ["Assessment rhythm", "Learners recover faster when revision, wellbeing, and attendance plans are integrated."], ["Wellbeing pulse", "Stable wellbeing scores create the clearest long-range lift in GPA resilience."]]
+  }
+};
+
+const arcLen = 2 * Math.PI * 86;
+let rangeKey = "30d";
+let filterKey = "all";
+let activeId = students[0].id;
+let shown = { learners: 0, ready: 0, attendance: 0, moves: 0 };
+
+const fmt = {
+  learners: value => Math.round(value).toLocaleString("en-IN"),
+  ready: value => Math.round(value),
+  attendance: value => value.toFixed(1) + "%",
+  moves: value => Math.round(value)
+};
+
+const $ = id => document.getElementById(id);
+const activeStudent = () => students.find(student => student.id === activeId) || students[0];
+const initials = name => name.split(" ").map(part => part[0]).join("").slice(0, 2).toUpperCase();
+const statusLabel = status => status === "on-track" ? "On track" : status === "watchlist" ? "Watchlist" : "Critical";
+const gradeClass = grade => grade.startsWith("A") ? "a" : grade.startsWith("B") ? "b" : "c";
+const riskClass = risk => risk < 25 ? "low" : risk < 60 ? "medium" : "high";
+const badgeClass = status => status === "on-track" ? "badge-ok" : status === "watchlist" ? "badge-mid" : "badge-hi";
+const avatarBg = status => status === "critical" ? "linear-gradient(135deg,#c65a3f,#d4a44e)" : status === "watchlist" ? "linear-gradient(135deg,#d4a44e,#7866d7)" : "linear-gradient(135deg,#1f7a72,#88a889)";
+const isStudentMode = () => document.body.classList.contains("student-mode");
+
+function tickClock() {
+  const now = new Date();
+  $("clockTime").textContent = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  $("clockDate").textContent = now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+}
+
+function tween(key, target, id) {
+  const start = shown[key];
+  const t0 = performance.now();
+  const duration = 900;
+  function step(now) {
+    const progress = Math.min((now - t0) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const value = start + (target - start) * eased;
+    $(id).textContent = fmt[key](value);
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      shown[key] = target;
+    }
+  }
+  requestAnimationFrame(step);
+}
+
+function filteredStudents() {
+  const query = $("search").value.trim().toLowerCase();
+  return students.filter(student => (filterKey === "all" || student.status === filterKey) && (!query || student.name.toLowerCase().includes(query) || student.dept.toLowerCase().includes(query) || student.id.toLowerCase().includes(query)));
+}
+
+function renderChrome() {
+  if (isStudentMode()) {
+    const student = activeStudent();
+    const firstName = student.name.split(" ")[0];
+    $("dashboardTitle").innerHTML = `<span>${firstName}</span> student dashboard`;
+    $("dashboardIntro").textContent = `Signed in with USN ${student.id}. This cleaner layout focuses on your academic snapshot, progress arc, and mentor-guided day plan.`;
+    $("registryTitle").textContent = "Your learning day plan";
+    $("nextBtn").textContent = "Log out";
+    return;
+  }
+
+  $("dashboardTitle").innerHTML = `<span>Scholar</span> dashboard with a calmer visual language`;
+  $("dashboardIntro").textContent = "The original neon-dark direction has been rebuilt into a bright planning studio with shared state across overview, spotlight, chart, roster, and schedule panels.";
+  $("registryTitle").textContent = "Student roster with live filters";
+  $("nextBtn").textContent = "Jump to next learner";
+}
+
+function renderHero() {
+  const range = ranges[rangeKey];
+  if (isStudentMode()) {
+    const student = activeStudent();
+    const primarySubject = student.subjects[0][0];
+    $("heroTitle").innerHTML = `Welcome back, <span>${student.name.split(" ")[0]}</span>.`;
+    $("rangeStory").textContent = "Your dashboard is simplified around the information you need most: where you stand, what to focus on next, and how today is structured.";
+    $("storyTitle").textContent = `${student.pred} projection with ${student.attendance}% attendance and readiness score ${student.ready}.`;
+    $("storyBody").textContent = student.action;
+    $("metricLabel1").textContent = "USN";
+    $("metricLabel2").textContent = "Projected grade";
+    $("metricLabel3").textContent = "Attendance";
+    $("metricLabel4").textContent = "Readiness";
+    $("mLearners").textContent = student.id;
+    $("mReady").textContent = student.pred;
+    $("mAttend").textContent = `${student.attendance}%`;
+    $("mMoves").textContent = `${student.ready}`;
+    $("metricNote1").textContent = student.dept;
+    $("metricNote2").textContent = `Current GPA ${student.gpa.toFixed(1)}`;
+    $("metricNote3").textContent = "Consistency across classes";
+    $("metricNote4").textContent = `Wellness ${student.wellness}`;
+    $("signalList").innerHTML = [
+      ["#1f7a72", "Mentor", student.mentor, "Connected"],
+      ["#d4a44e", "Risk", `${student.risk}% current risk`, "Monitor"],
+      ["#7866d7", "Today's focus", primarySubject, "Priority"]
+    ].map(signal => `
+      <div class="signal-item">
+        <div class="dot" style="background:${signal[0]}"></div>
+        <div><strong>${signal[1]}</strong><span>${signal[2]}</span></div>
+        <em>${signal[3]}</em>
+      </div>
+    `).join("");
+    return;
+  }
+
+  $("heroTitle").innerHTML = `From <span>raw alerts</span> to calm academic direction.`;
+  $("rangeStory").textContent = range.story;
+  $("storyTitle").textContent = range.title;
+  $("storyBody").textContent = range.body;
+  $("metricLabel1").textContent = "Active learners";
+  $("metricLabel2").textContent = "Readiness index";
+  $("metricLabel3").textContent = "Attendance confidence";
+  $("metricLabel4").textContent = "Intervention momentum";
+  $("metricNote1").textContent = "Across all tracked departments";
+  $("metricNote2").textContent = "Mastery, rhythm, and wellbeing";
+  $("metricNote3").textContent = "Signal quality for intervention timing";
+  $("metricNote4").textContent = "Coach touches closed this cycle";
+  tween("learners", range.learners, "mLearners");
+  tween("ready", range.ready, "mReady");
+  tween("attendance", range.attendance, "mAttend");
+  tween("moves", range.moves, "mMoves");
+  $("signalList").innerHTML = range.signals.map(signal => `
+    <div class="signal-item">
+      <div class="dot" style="background:${signal[0]}"></div>
+      <div><strong>${signal[1]}</strong><span>${signal[2]}</span></div>
+      <em>${signal[3]}</em>
+    </div>
+  `).join("");
+}
+
+function renderMeter() {
+  const range = ranges[rangeKey];
+  const arc = $("meterArc");
+  const offset = arcLen - (arcLen * range.score) / 100;
+  arc.style.strokeDasharray = arcLen.toFixed(2);
+  arc.style.strokeDashoffset = arcLen.toFixed(2);
+  requestAnimationFrame(() => {
+    arc.style.transition = "stroke-dashoffset 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)";
+    arc.style.strokeDashoffset = offset.toFixed(2);
+  });
+  $("meterScore").textContent = range.score;
+  $("meterDelta").textContent = range.delta;
+  const label = $("meterLabel");
+  label.textContent = range.label;
+  label.className = `pill ${range.badge}`;
+  $("priorityList").innerHTML = [...students].sort((a, b) => b.risk - a.risk).slice(0, 3).map(student => `
+    <div class="action">
+      <strong>${student.name}</strong>
+      <span>${statusLabel(student.status)} in ${student.dept} with ${student.risk}% risk. Next: ${student.action}</span>
+    </div>
+  `).join("");
+}
+
+function drawChart() {
+  const canvas = $("chart");
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const width = canvas.clientWidth;
+  const height = 280;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const range = ranges[rangeKey];
+  const student = activeStudent();
+  const pad = { t: 24, r: 22, b: 34, l: 28 };
+  const chartWidth = width - pad.l - pad.r;
+  const chartHeight = height - pad.t - pad.b;
+  const min = 45;
+  const max = 100;
+
+  ctx.strokeStyle = "rgba(31, 42, 55, 0.08)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 4; i += 1) {
+    const y = pad.t + (chartHeight / 3) * i;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(width - pad.r, y);
+    ctx.stroke();
+  }
+
+  range.labels.forEach((label, index) => {
+    const x = pad.l + (chartWidth / (range.labels.length - 1)) * index;
+    ctx.fillStyle = "#758090";
+    ctx.font = "12px IBM Plex Mono";
+    ctx.textAlign = index === 0 ? "left" : index === range.labels.length - 1 ? "right" : "center";
+    ctx.fillText(label, x, height - 10);
+  });
+
+  const points = values => values.map((value, index) => ({
+    x: pad.l + (chartWidth / (values.length - 1)) * index,
+    y: pad.t + chartHeight - ((value - min) / (max - min)) * chartHeight
+  }));
+
+  function drawSeries(seriesPoints, stroke, fill) {
+    ctx.beginPath();
+    seriesPoints.forEach((point, index) => {
+      if (index === 0) {
+        ctx.moveTo(point.x, point.y);
+      } else {
+        ctx.lineTo(point.x, point.y);
+      }
+    });
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 3;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.stroke();
+
+    ctx.lineTo(seriesPoints[seriesPoints.length - 1].x, height - pad.b);
+    ctx.lineTo(seriesPoints[0].x, height - pad.b);
+    ctx.closePath();
+    const gradient = ctx.createLinearGradient(0, pad.t, 0, height - pad.b);
+    gradient.addColorStop(0, fill);
+    gradient.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    seriesPoints.forEach(point => {
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 4.5, 0, Math.PI * 2);
+      ctx.fillStyle = stroke;
+      ctx.fill();
+    });
+  }
+
+  const campusPoints = points(range.campus);
+  const learnerPoints = points(student.trends[rangeKey]);
+  drawSeries(campusPoints, "rgba(136, 168, 137, 1)", "rgba(136, 168, 137, 0.12)");
+  drawSeries(learnerPoints, "rgba(212, 164, 78, 1)", "rgba(212, 164, 78, 0.14)");
+
+  const end = learnerPoints[learnerPoints.length - 1];
+  ctx.fillStyle = "#1f2a37";
+  ctx.font = "600 12px Manrope";
+  ctx.textAlign = "left";
+  ctx.fillText(student.name, Math.min(end.x + 12, width - 130), end.y - 12);
+
+  if (isStudentMode()) {
+    $("trajectoryTitle").textContent = "Your progress arc";
+    $("chartText").textContent = "Your recent performance trend is shown against the broader campus baseline so you can quickly see whether you are gaining or slipping.";
+    $("cLabel1").textContent = "Current GPA";
+    $("cLabel2").textContent = "Risk level";
+    $("cLabel3").textContent = "Wellness";
+    $("cAttend").textContent = student.gpa.toFixed(1);
+    $("cRisk").textContent = `${student.risk}%`;
+    $("cEngage").textContent = `${student.wellness}`;
+    return;
+  }
+
+  $("trajectoryTitle").textContent = "Campus vs selected learner";
+  $("chartText").textContent = range.chart;
+  $("cLabel1").textContent = "Attendance drift";
+  $("cLabel2").textContent = "Risk compression";
+  $("cLabel3").textContent = "Engagement lift";
+  $("cAttend").textContent = range.att;
+  $("cRisk").textContent = range.risk;
+  $("cEngage").textContent = range.eng;
+}
+
+function renderSpot() {
+  const student = activeStudent();
+  $("spot").innerHTML = `
+    <div class="person">
+      <div class="avatar" style="background:${avatarBg(student.status)}">${initials(student.name)}</div>
+      <div>
+        <h4>${student.name}</h4>
+        <p>${student.dept} - ${student.id}</p>
+        <div class="pill ${badgeClass(student.status)}">${statusLabel(student.status)}</div>
+      </div>
+    </div>
+    <div class="note">${student.note}</div>
+    <div class="stats">
+      <div class="mini"><small>Readiness</small><strong>${student.ready}</strong></div>
+      <div class="mini"><small>Attendance</small><strong>${student.attendance}%</strong></div>
+      <div class="mini"><small>GPA</small><strong>${student.gpa.toFixed(1)}</strong></div>
+    </div>
+    <div class="stats">
+      <div class="mini"><small>Wellness</small><strong>${student.wellness}</strong></div>
+      <div class="mini"><small>Prediction</small><strong>${student.pred}</strong></div>
+      <div class="mini"><small>Risk</small><strong>${student.risk}%</strong></div>
+    </div>
+    <div class="tags">${student.tags.map(tag => `<div class="tag">${tag}</div>`).join("")}</div>
+    <div><div class="eyebrow">Next best action</div><p class="note">${student.action}</p></div>
+    <div>
+      <div class="eyebrow">Subject shape</div>
+      ${student.subjects.map(subject => `
+        <div class="subject">
+          <div class="subject-head"><span>${subject[0]}</span><strong>${subject[1]}%</strong></div>
+          <div class="track"><div class="fill" style="width:${subject[1]}%;background:${subject[2]}"></div></div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderActions() {
+  const student = activeStudent();
+  const range = ranges[rangeKey];
+  $("pulseGrid").innerHTML = range.pulses.map(item => `
+    <div class="pulse">
+      <strong>${item[0]}</strong>
+      <span>${item[1]}</span>
+    </div>
+  `).join("");
+  $("actionsList").innerHTML = [
+    ["Primary coach move", student.action],
+    ["Mentor note", student.mentorNote],
+    ["Support intensity", `${statusLabel(student.status)} learner in ${student.dept}. Risk is ${student.risk}% with predicted grade ${student.pred}.`]
+  ].map(item => `
+    <div class="action">
+      <strong>${item[0]}</strong>
+      <span>${item[1]}</span>
+    </div>
+  `).join("");
+}
+
+function renderPlanner() {
+  const student = activeStudent();
+  $("planTitle").textContent = `Today for ${student.name}`;
+  $("planSummary").textContent = student.note;
+  $("mentorName").textContent = `Mentor: ${student.mentor}`;
+  $("mentorText").textContent = student.mentorNote;
+  $("slots").innerHTML = student.schedule.map(slot => `
+    <div class="slot">
+      <strong>${slot[0]} - ${slot[1]}</strong>
+      <span>${slot[2]}</span>
+    </div>
+  `).join("");
+}
+
+function renderTable() {
+  if (isStudentMode()) {
+    const student = activeStudent();
+    $("registryCount").textContent = `USN ${student.id} - Date of birth verified`;
+    $("tbody").innerHTML = "";
+    return;
+  }
+
+  const list = filteredStudents();
+  const tbody = $("tbody");
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty">No learners match this filter combination.</td></tr>`;
+    $("registryCount").textContent = "No learners match the current search and status filters.";
+    return;
+  }
+
+  if (!list.some(student => student.id === activeId)) {
+    activeId = list[0].id;
+  }
+
+  tbody.innerHTML = list.map(student => `
+    <tr data-id="${student.id}" class="${student.id === activeId ? "active" : ""}">
+      <td data-label="Learner"><div class="student"><strong>${student.name}</strong><span>${student.id}</span></div></td>
+      <td data-label="Department">${student.dept}</td>
+      <td data-label="Attendance">${student.attendance}%</td>
+      <td data-label="Prediction"><span class="grade ${gradeClass(student.pred)}">${student.pred}</span></td>
+      <td data-label="Risk"><span class="risk ${riskClass(student.risk)}">${student.risk}% risk</span></td>
+    </tr>
+  `).join("");
+
+  $("registryCount").textContent = `${list.length} learners available in the current studio view.`;
+
+  tbody.querySelectorAll("tr[data-id]").forEach(row => {
+    row.addEventListener("click", () => {
+      activeId = row.dataset.id;
+      renderAll();
+      renderTable();
+    });
+  });
+}
+
+function renderAll() {
+  renderChrome();
+  renderHero();
+  renderMeter();
+  renderSpot();
+  renderActions();
+  renderPlanner();
+  drawChart();
+}
+
+function loginStudent(student) {
+  activeId = student.id;
+  document.body.classList.add("logged-in", "student-mode");
+  $("usnInput").value = student.id;
+  $("dobInput").value = student.dob;
+  $("loginError").textContent = "";
+  localStorage.setItem("scholar-login", JSON.stringify({ id: student.id, dob: student.dob }));
+  renderAll();
+  renderTable();
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}
+
+function logoutStudent() {
+  document.body.classList.remove("logged-in", "student-mode");
+  localStorage.removeItem("scholar-login");
+  $("usnInput").value = "";
+  $("dobInput").value = "";
+  $("loginError").textContent = "";
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}
+
+function restoreLogin() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("scholar-login") || "null");
+    if (!saved) {
+      return;
+    }
+    const student = students.find(item => item.id === saved.id && item.dob === saved.dob);
+    if (student) {
+      loginStudent(student);
+    }
+  } catch (error) {
+    localStorage.removeItem("scholar-login");
+  }
+}
+
+document.querySelectorAll(".range").forEach(button => {
+  button.addEventListener("click", () => {
+    rangeKey = button.dataset.range;
+    document.querySelectorAll(".range").forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+    renderAll();
+  });
+});
+
+document.querySelectorAll(".filter").forEach(button => {
+  button.addEventListener("click", () => {
+    filterKey = button.dataset.filter;
+    document.querySelectorAll(".filter").forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+    const list = filteredStudents();
+    if (list.length && !list.some(student => student.id === activeId)) {
+      activeId = list[0].id;
+    }
+    renderAll();
+    renderTable();
+  });
+});
+
+$("search").addEventListener("input", () => {
+  const list = filteredStudents();
+  if (list.length && !list.some(student => student.id === activeId)) {
+    activeId = list[0].id;
+  }
+  renderAll();
+  renderTable();
+});
+
+$("nextBtn").addEventListener("click", () => {
+  if (isStudentMode()) {
+    logoutStudent();
+    return;
+  }
+  const list = filteredStudents();
+  if (!list.length) {
+    return;
+  }
+  const index = list.findIndex(student => student.id === activeId);
+  activeId = list[(index + 1 + list.length) % list.length].id;
+  renderAll();
+  renderTable();
+});
+
+window.addEventListener("resize", drawChart);
+
+document.addEventListener("pointermove", event => {
+  document.documentElement.style.setProperty("--px", `${(event.clientX / window.innerWidth) * 100}%`);
+  document.documentElement.style.setProperty("--py", `${(event.clientY / window.innerHeight) * 100}%`);
+});
+
+$("loginForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const usn = $("usnInput").value.trim().toUpperCase();
+  const dob = $("dobInput").value;
+  const student = students.find(item => item.id.toUpperCase() === usn && item.dob === dob);
+  if (!student) {
+    $("loginError").textContent = "We could not match that USN and date of birth. Try one of the demo accounts or check the details.";
+    return;
+  }
+  loginStudent(student);
+});
+
+document.querySelectorAll(".demo-chip").forEach(button => {
+  button.addEventListener("click", () => {
+    $("usnInput").value = button.dataset.usn;
+    $("dobInput").value = button.dataset.dob;
+    $("loginError").textContent = "";
+  });
+});
+
+tickClock();
+setInterval(tickClock, 1000);
+renderAll();
+renderTable();
+restoreLogin();
+</script>
+</body>
+</html>
