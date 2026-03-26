@@ -608,7 +608,8 @@
   .actions,
   .slots,
   .pulse-grid,
-  .spot {
+  .spot,
+  .sports-grid {
     display: grid;
     gap: 12px;
   }
@@ -809,6 +810,54 @@
     color: var(--ink);
     background: rgba(255, 255, 255, 0.74);
     border: 1px solid var(--line);
+  }
+
+  .sports-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sports-card {
+    position: relative;
+    display: grid;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(249, 245, 238, 0.72));
+    border: 1px solid rgba(31, 42, 55, 0.08);
+    overflow: hidden;
+  }
+
+  .sports-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--sport-accent, var(--teal));
+  }
+
+  .sports-card small {
+    color: var(--muted);
+    font: 500 0.68rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .sports-card strong {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .sports-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .sports-card span {
+    color: var(--sport-accent, var(--teal));
+    font: 600 0.72rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .subject {
@@ -1064,6 +1113,10 @@
     }
 
     body.logged-in.student-mode .signal-list {
+      grid-template-columns: 1fr;
+    }
+
+    .sports-grid {
       grid-template-columns: 1fr;
     }
 
@@ -1407,6 +1460,49 @@ const students = [
   }
 ];
 
+const sportsAchievements = {
+  S1042: [
+    ["Athletics", "400m relay silver", "Closed the anchor leg at the inter-college meet with the team's best split time.", "#1f7a72", "District podium"],
+    ["Combat", "Taekwondo yellow belt", "Cleared the latest grading round with strong control in sparring drills.", "#7866d7", "Belt certification"],
+    ["Adventure sports", "Rock-climbing wall finalist", "Finished in the top five during the campus endurance climb challenge.", "#d4a44e", "Top-5 finish"],
+    ["Fitness training", "Strength cycle completed", "Maintained a 12-week conditioning streak across mobility, power, and recovery sessions.", "#c65a3f", "12-week streak"]
+  ],
+  S1078: [
+    ["Athletics", "Shot put finalist", "Improved throw distance steadily through department-level athletics meets.", "#1f7a72", "Department finalist"],
+    ["Combat", "Karate fundamentals badge", "Completed the beginner kata and defense assessment with consistent practice.", "#7866d7", "Foundation badge"],
+    ["Adventure sports", "Western Ghats trek finisher", "Completed the overnight trail with team pacing and checkpoint discipline.", "#d4a44e", "Endurance certificate"],
+    ["Fitness training", "Mobility restart program", "Returned to coached conditioning and now completes guided recovery blocks each week.", "#c65a3f", "Recovery in progress"]
+  ],
+  S1091: [
+    ["Athletics", "800m bronze", "Earned a podium finish with a controlled pace and a strong final-lap kick.", "#1f7a72", "University bronze"],
+    ["Combat", "Fencing novice medal", "Reached the semifinals with precise timing and disciplined footwork.", "#7866d7", "Semifinal medal"],
+    ["Adventure sports", "Kayaking challenge finisher", "Completed the controlled-water navigation circuit during the annual outdoor camp.", "#d4a44e", "Camp finisher"],
+    ["Fitness training", "Functional training mentor", "Helps lead weekend warm-up clusters and demonstrates excellent movement form.", "#c65a3f", "Peer mentor"]
+  ],
+  S1034: [
+    ["Athletics", "Javelin participation honor", "Returned to field events and rebuilt confidence through coached throws.", "#1f7a72", "Return-to-play"],
+    ["Combat", "Boxing conditioning camp", "Completed the technique and stamina foundation block with steady progress.", "#7866d7", "Camp completion"],
+    ["Adventure sports", "Obstacle course finisher", "Worked through the guided obstacle circuit to rebuild resilience and pacing.", "#d4a44e", "Course finisher"],
+    ["Fitness training", "Recovery fitness plan", "Rejoined supervised strength and mobility sessions after a difficult academic stretch.", "#c65a3f", "Coach-supported plan"]
+  ],
+  S1082: [
+    ["Athletics", "5K campus winner", "Held an even pace and finished first in the women's category at the campus run.", "#1f7a72", "Campus champion"],
+    ["Combat", "Judo orange belt", "Advanced through the latest grading with sharp balance control and mat awareness.", "#7866d7", "Belt progression"],
+    ["Adventure sports", "Cycling expedition lead", "Co-led a 42 km endurance ride and managed checkpoint coordination.", "#d4a44e", "Ride leader"],
+    ["Fitness training", "Yoga and core excellence", "Maintained full-season flexibility and balance targets with near-perfect attendance.", "#c65a3f", "Season distinction"]
+  ],
+  S1023: [
+    ["Athletics", "400m hurdles finalist", "Improved hurdle rhythm and placed among the top performers in the mechanical cohort.", "#1f7a72", "Finalist"],
+    ["Combat", "Kickboxing sparring badge", "Completed the controlled-contact assessment round with solid defensive control.", "#7866d7", "Assessment cleared"],
+    ["Adventure sports", "Trail run finisher", "Placed in the top ten during the monsoon endurance trail event.", "#d4a44e", "Top-10 finish"],
+    ["Fitness training", "Strength benchmark cleared", "Reached the semester conditioning targets in coached gym sessions.", "#c65a3f", "Benchmark cleared"]
+  ]
+};
+
+students.forEach(student => {
+  student.sports = sportsAchievements[student.id] || [];
+});
+
 const ranges = {
   "30d": {
     learners: 2847, ready: 86, attendance: 92.4, moves: 73, score: 84, delta: "+4.2 trend shift",
@@ -1728,6 +1824,19 @@ function renderSpot() {
       <div class="mini"><small>Risk</small><strong>${student.risk}%</strong></div>
     </div>
     <div class="tags">${student.tags.map(tag => `<div class="tag">${tag}</div>`).join("")}</div>
+    <div>
+      <div class="eyebrow">Sports achievements</div>
+      <div class="sports-grid">
+        ${student.sports.map(sport => `
+          <div class="sports-card" style="--sport-accent:${sport[3]}">
+            <small>${sport[0]}</small>
+            <strong>${sport[1]}</strong>
+            <p>${sport[2]}</p>
+            <span>${sport[4]}</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
     <div><div class="eyebrow">Next best action</div><p class="note">${student.action}</p></div>
     <div>
       <div class="eyebrow">Subject shape</div>
