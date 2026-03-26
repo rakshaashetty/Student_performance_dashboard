@@ -853,7 +853,27 @@
     line-height: 1.55;
   }
 
-  .sports-card span {
+  .sports-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sports-score {
+    color: var(--sport-accent, var(--teal));
+    font: 700 1rem "Fraunces", serif;
+    letter-spacing: -0.02em;
+  }
+
+  .sports-result {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(31, 42, 55, 0.08);
     color: var(--sport-accent, var(--teal));
     font: 600 0.72rem "IBM Plex Mono", monospace;
     letter-spacing: 0.06em;
@@ -1184,9 +1204,9 @@
 
       <div class="helper-text">Demo accounts for testing:</div>
       <div class="demo-row">
-        <button class="demo-chip" type="button" data-usn="S1042" data-dob="2005-04-12"><strong>Krishnan</strong><span>4MC23CS001 - 2005-04-12</span></button>
-        <button class="demo-chip" type="button" data-usn="S1091" data-dob="2004-11-03"><strong>Priya Nair</strong><span>4MC23CS002 - 2004-11-03</span></button>
-        <button class="demo-chip" type="button" data-usn="S1034" data-dob="2004-08-19"><strong>Vikram Sinha</strong><span>4MC23CS003 - 2004-08-19</span></button>
+        <button class="demo-chip" type="button" data-usn="4MCE26CS001" data-dob="2005-04-12"><strong>Krishnan</strong><span>4MCE26CS001 - 2005-04-12</span></button>
+        <button class="demo-chip" type="button" data-usn="4MCE26CS002" data-dob="2005-02-26"><strong>Rohan Mehta</strong><span>4MCE26CS002 - 2005-02-26</span></button>
+        <button class="demo-chip" type="button" data-usn="4MCE26CS003" data-dob="2004-11-03"><strong>Priya Nair</strong><span>4MCE26CS003 - 2004-11-03</span></button>
       </div>
       <div class="login-error" id="loginError"></div>
     </div>
@@ -1302,7 +1322,7 @@
 
     <section class="registry glass fade" id="registry" style="animation-delay:.48s">
       <div class="reg-head">
-        <div><div class="eyebrow">Registry</div><h3 id="registryTitle">Student roster with live filters</h3><p id="registryCount">6 learners available in the current studio view.</p></div>
+        <div><div class="eyebrow">Registry</div><h3 id="registryTitle">Student roster with live filters</h3><p id="registryCount">20 learners available in the current studio view.</p></div>
         <div class="reg-tools">
           <label class="search"><span class="muted">Search</span><input id="search" type="search" placeholder="Search by learner or department"></label>
           <div class="filters">
@@ -1333,7 +1353,7 @@
 <script>
 const students = [
   {
-    id: "S1042",
+    id: "4MCE26CS001",
     name: "Krishnan",
     dob: "2005-04-12",
     dept: "Computer Science",
@@ -1354,7 +1374,7 @@ const students = [
     trends: { "30d": [80, 82, 84, 83, 87, 90], "90d": [74, 76, 78, 79, 82, 86], "180d": [70, 72, 75, 77, 81, 85] }
   },
   {
-    id: "S1078",
+    id: "4MCE26CS002",
     name: "Rohan Mehta",
     dob: "2005-02-26",
     dept: "Electronics",
@@ -1375,7 +1395,7 @@ const students = [
     trends: { "30d": [63, 66, 67, 65, 69, 71], "90d": [60, 61, 64, 63, 66, 69], "180d": [58, 60, 61, 63, 65, 68] }
   },
   {
-    id: "S1091",
+    id: "4MCE26CS003",
     name: "Priya Nair",
     dob: "2004-11-03",
     dept: "Data Science",
@@ -1396,7 +1416,7 @@ const students = [
     trends: { "30d": [78, 81, 82, 84, 86, 88], "90d": [72, 74, 77, 80, 83, 86], "180d": [68, 70, 73, 76, 80, 84] }
   },
   {
-    id: "S1034",
+    id: "4MCE26CS004",
     name: "Vikram Sinha",
     dob: "2004-08-19",
     dept: "Mechanical",
@@ -1417,7 +1437,7 @@ const students = [
     trends: { "30d": [60, 58, 57, 55, 53, 52], "90d": [65, 63, 61, 58, 56, 54], "180d": [70, 67, 64, 61, 57, 54] }
   },
   {
-    id: "S1082",
+    id: "4MCE26CS005",
     name: "Kavya Reddy",
     dob: "2005-01-14",
     dept: "Biotechnology",
@@ -1438,7 +1458,7 @@ const students = [
     trends: { "30d": [75, 77, 80, 82, 84, 86], "90d": [71, 73, 75, 78, 81, 84], "180d": [67, 69, 72, 75, 79, 82] }
   },
   {
-    id: "S1023",
+    id: "4MCE26CS006",
     name: "Rahul Gupta",
     dob: "2004-09-07",
     dept: "Mechanical",
@@ -1460,44 +1480,322 @@ const students = [
   }
 ];
 
-const sportsAchievements = {
-  S1042: [
-    ["Athletics", "400m relay silver", "Closed the anchor leg at the inter-college meet with the team's best split time.", "#1f7a72", "District podium"],
-    ["Combat", "Taekwondo yellow belt", "Cleared the latest grading round with strong control in sparring drills.", "#7866d7", "Belt certification"],
-    ["Adventure sports", "Rock-climbing wall finalist", "Finished in the top five during the campus endurance climb challenge.", "#d4a44e", "Top-5 finish"],
-    ["Fitness training", "Strength cycle completed", "Maintained a 12-week conditioning streak across mobility, power, and recovery sessions.", "#c65a3f", "12-week streak"]
-  ],
-  S1078: [
-    ["Athletics", "Shot put finalist", "Improved throw distance steadily through department-level athletics meets.", "#1f7a72", "Department finalist"],
-    ["Combat", "Karate fundamentals badge", "Completed the beginner kata and defense assessment with consistent practice.", "#7866d7", "Foundation badge"],
-    ["Adventure sports", "Western Ghats trek finisher", "Completed the overnight trail with team pacing and checkpoint discipline.", "#d4a44e", "Endurance certificate"],
-    ["Fitness training", "Mobility restart program", "Returned to coached conditioning and now completes guided recovery blocks each week.", "#c65a3f", "Recovery in progress"]
-  ],
-  S1091: [
-    ["Athletics", "800m bronze", "Earned a podium finish with a controlled pace and a strong final-lap kick.", "#1f7a72", "University bronze"],
-    ["Combat", "Fencing novice medal", "Reached the semifinals with precise timing and disciplined footwork.", "#7866d7", "Semifinal medal"],
-    ["Adventure sports", "Kayaking challenge finisher", "Completed the controlled-water navigation circuit during the annual outdoor camp.", "#d4a44e", "Camp finisher"],
-    ["Fitness training", "Functional training mentor", "Helps lead weekend warm-up clusters and demonstrates excellent movement form.", "#c65a3f", "Peer mentor"]
-  ],
-  S1034: [
-    ["Athletics", "Javelin participation honor", "Returned to field events and rebuilt confidence through coached throws.", "#1f7a72", "Return-to-play"],
-    ["Combat", "Boxing conditioning camp", "Completed the technique and stamina foundation block with steady progress.", "#7866d7", "Camp completion"],
-    ["Adventure sports", "Obstacle course finisher", "Worked through the guided obstacle circuit to rebuild resilience and pacing.", "#d4a44e", "Course finisher"],
-    ["Fitness training", "Recovery fitness plan", "Rejoined supervised strength and mobility sessions after a difficult academic stretch.", "#c65a3f", "Coach-supported plan"]
-  ],
-  S1082: [
-    ["Athletics", "5K campus winner", "Held an even pace and finished first in the women's category at the campus run.", "#1f7a72", "Campus champion"],
-    ["Combat", "Judo orange belt", "Advanced through the latest grading with sharp balance control and mat awareness.", "#7866d7", "Belt progression"],
-    ["Adventure sports", "Cycling expedition lead", "Co-led a 42 km endurance ride and managed checkpoint coordination.", "#d4a44e", "Ride leader"],
-    ["Fitness training", "Yoga and core excellence", "Maintained full-season flexibility and balance targets with near-perfect attendance.", "#c65a3f", "Season distinction"]
-  ],
-  S1023: [
-    ["Athletics", "400m hurdles finalist", "Improved hurdle rhythm and placed among the top performers in the mechanical cohort.", "#1f7a72", "Finalist"],
-    ["Combat", "Kickboxing sparring badge", "Completed the controlled-contact assessment round with solid defensive control.", "#7866d7", "Assessment cleared"],
-    ["Adventure sports", "Trail run finisher", "Placed in the top ten during the monsoon endurance trail event.", "#d4a44e", "Top-10 finish"],
-    ["Fitness training", "Strength benchmark cleared", "Reached the semester conditioning targets in coached gym sessions.", "#c65a3f", "Benchmark cleared"]
-  ]
+const cloneSchedule = schedule => schedule.map(slot => [...slot]);
+const cloneSubjects = subjects => subjects.map(subject => [...subject]);
+const cloneTrends = trends => Object.fromEntries(Object.entries(trends).map(([key, values]) => [key, [...values]]));
+const shiftTrends = (trends, delta) => Object.fromEntries(Object.entries(trends).map(([key, values]) => [key, values.map(value => Math.max(45, Math.min(98, value + delta)))]));
+const adjustSubjects = (subjects, delta) => subjects.map(subject => [subject[0], Math.max(45, Math.min(98, subject[1] + delta)), subject[2]]);
+const makeUsn = index => `4MCE26CS${String(index).padStart(3, "0")}`;
+
+function makeVariant(template, overrides = {}) {
+  const { tags, schedule, subjects, trends, subjectShift = 0, trendShift = 0, ...rest } = overrides;
+  return {
+    ...template,
+    ...rest,
+    tags: tags ? [...tags] : [...template.tags],
+    schedule: schedule ? cloneSchedule(schedule) : cloneSchedule(template.schedule),
+    subjects: subjects ? cloneSubjects(subjects) : adjustSubjects(template.subjects, subjectShift),
+    trends: trends ? cloneTrends(trends) : shiftTrends(template.trends, trendShift)
+  };
+}
+
+const additionalStudents = [
+  makeVariant(students[0], {
+    name: "Ananya Rao",
+    dob: "2005-06-18",
+    gpa: 8.9,
+    attendance: 93,
+    wellness: 86,
+    risk: 14,
+    pred: "A-",
+    ready: 88,
+    note: "Reliable problem-solver with calm delivery in lab reviews.",
+    mentorNote: "Build speaking confidence during project demos while keeping strong coding rhythm.",
+    action: "Assign one capstone presentation slot and keep advanced problem sets in her weekly plan.",
+    tags: ["steady performer", "presentation growth", "lab lead"],
+    subjectShift: -1,
+    trendShift: -1
+  }),
+  makeVariant(students[1], {
+    name: "Arjun Patel",
+    dob: "2005-03-11",
+    gpa: 7.6,
+    attendance: 74,
+    wellness: 65,
+    risk: 52,
+    pred: "B",
+    ready: 71,
+    note: "Shows solid understanding in lab reviews but still needs stronger weekly pacing.",
+    mentorNote: "Convert late starts into a fixed preparation routine before every practical block.",
+    action: "Add one supervised revision lab and one attendance checkpoint per week.",
+    tags: ["lab potential", "needs pacing", "recoverable"],
+    subjectShift: 2,
+    trendShift: 2
+  }),
+  makeVariant(students[2], {
+    name: "Neha Joseph",
+    dob: "2004-12-02",
+    gpa: 8.7,
+    attendance: 92,
+    wellness: 84,
+    risk: 16,
+    pred: "A-",
+    ready: 87,
+    note: "Strong analytical learner who benefits from collaborative model reviews.",
+    mentorNote: "Push for more visible ownership during team presentations and sprint demos.",
+    action: "Let her lead one analytics walkthrough each fortnight.",
+    tags: ["analysis strength", "quiet leader", "clear thinker"],
+    subjectShift: -1,
+    trendShift: -1
+  }),
+  makeVariant(students[4], {
+    name: "Meera Joshi",
+    dob: "2005-05-09",
+    gpa: 8.4,
+    attendance: 90,
+    wellness: 83,
+    risk: 18,
+    pred: "A-",
+    ready: 84,
+    note: "Balances lab work well and adapts quickly to research-heavy assignments.",
+    mentorNote: "Introduce one stretch experiment each cycle without overloading core work.",
+    action: "Move her toward guided mini-research outputs with weekly review notes.",
+    tags: ["balanced learner", "research growth", "steady pace"],
+    subjectShift: -2,
+    trendShift: -2
+  }),
+  makeVariant(students[3], {
+    name: "Nikhil Dsouza",
+    dob: "2004-10-22",
+    gpa: 6.2,
+    attendance: 66,
+    wellness: 58,
+    risk: 76,
+    pred: "C",
+    ready: 57,
+    note: "Needs regular structure and rapid mentor follow-up to stabilize performance.",
+    mentorNote: "Keep goals short, measurable, and visible after each support meeting.",
+    action: "Create a 10-day recovery sheet with practical attendance and workshop targets.",
+    tags: ["needs structure", "mentor intensive", "urgent recovery"],
+    subjectShift: 3,
+    trendShift: 3
+  }),
+  makeVariant(students[0], {
+    name: "Sana Khan",
+    dob: "2005-07-03",
+    status: "watchlist",
+    gpa: 7.8,
+    attendance: 76,
+    wellness: 72,
+    risk: 46,
+    pred: "B",
+    ready: 74,
+    mentor: "Prof. Meera Rao",
+    note: "Good coding instincts, but momentum drops whenever projects and tests overlap.",
+    mentorNote: "Protect deep work time and reduce the last-minute switch between tasks.",
+    action: "Set two fixed DSA revision blocks and one project checkpoint each week.",
+    tags: ["high potential", "needs rhythm", "project pressure"],
+    subjectShift: -8,
+    trendShift: -7
+  }),
+  makeVariant(students[2], {
+    name: "Pooja Menon",
+    dob: "2005-01-27",
+    gpa: 8.6,
+    attendance: 91,
+    wellness: 86,
+    risk: 15,
+    pred: "A-",
+    ready: 86,
+    note: "Comfortable with data interpretation and improving fast in review discussions.",
+    mentorNote: "Shift her from support role to visible presenter during team analytics demos.",
+    action: "Schedule one public walkthrough of model decisions every sprint.",
+    tags: ["presentation lift", "strong reasoning", "steady arc"],
+    subjectShift: -2,
+    trendShift: -1
+  }),
+  makeVariant(students[1], {
+    name: "Aditya Verma",
+    dob: "2005-04-30",
+    gpa: 7.1,
+    attendance: 72,
+    wellness: 64,
+    risk: 55,
+    pred: "B-",
+    ready: 68,
+    note: "Can recover quickly when work is chunked into smaller lab and revision milestones.",
+    mentorNote: "Reduce unplanned absences by locking in a clear pre-lab ritual.",
+    action: "Pair each major lab with one rehearsal block and a mentor check-in.",
+    tags: ["late starter", "practical learner", "needs planning"],
+    subjectShift: -1,
+    trendShift: -1
+  }),
+  makeVariant(students[5], {
+    name: "Harshith Gowda",
+    dob: "2004-12-14",
+    gpa: 7.0,
+    attendance: 77,
+    wellness: 68,
+    risk: 48,
+    pred: "B-",
+    ready: 70,
+    note: "Performs better when mock tests are spaced out and reviewed immediately.",
+    mentorNote: "Turn his practical confidence into steadier written responses before exams.",
+    action: "Add one timed drill and one short review reflection before each assessment.",
+    tags: ["practical confidence", "needs review", "recoverable"],
+    subjectShift: -1,
+    trendShift: -2
+  }),
+  makeVariant(students[4], {
+    name: "Sneha Kulkarni",
+    dob: "2005-02-08",
+    gpa: 8.9,
+    attendance: 94,
+    wellness: 88,
+    risk: 11,
+    pred: "A",
+    ready: 90,
+    note: "Consistent learner with strong lab discipline and calm follow-through.",
+    mentorNote: "Give her stretch opportunities that include peer mentoring in the lab.",
+    action: "Assign one guided mentoring slot during the next research cycle.",
+    tags: ["mentor ready", "lab anchor", "strong follow-through"],
+    subjectShift: 1,
+    trendShift: 1
+  }),
+  makeVariant(students[0], {
+    name: "Varun Shetty",
+    dob: "2005-08-16",
+    gpa: 9.0,
+    attendance: 95,
+    wellness: 87,
+    risk: 10,
+    pred: "A",
+    ready: 90,
+    note: "Fast learner with dependable submission quality across technical modules.",
+    mentorNote: "Channel his speed into mentoring without letting his own depth of work slip.",
+    action: "Offer him one peer-review leadership slot alongside advanced lab tasks.",
+    tags: ["fast learner", "peer support", "consistent output"],
+    subjectShift: 0,
+    trendShift: 0
+  }),
+  makeVariant(students[2], {
+    name: "Keerthana Pai",
+    dob: "2005-03-25",
+    gpa: 8.5,
+    attendance: 90,
+    wellness: 82,
+    risk: 18,
+    pred: "A-",
+    ready: 85,
+    note: "Strong modeler who responds well to structured critique and rehearsal time.",
+    mentorNote: "Build confidence by giving her ownership over one complete review narrative.",
+    action: "Place her on the next demo review panel with one formal speaking slot.",
+    tags: ["clear thinker", "modeling growth", "review ready"],
+    subjectShift: -2,
+    trendShift: -2
+  }),
+  makeVariant(students[3], {
+    name: "Manav Bhat",
+    dob: "2004-11-19",
+    gpa: 6.0,
+    attendance: 64,
+    wellness: 56,
+    risk: 82,
+    pred: "C",
+    ready: 54,
+    note: "Needs immediate academic structure before slipping into a deeper attendance decline.",
+    mentorNote: "Keep interventions frequent, simple, and reinforced with visible milestones.",
+    action: "Start a same-week recovery ladder across attendance, lab submissions, and mentor contact.",
+    tags: ["critical", "needs intervention", "low confidence"],
+    subjectShift: 1,
+    trendShift: 1
+  }),
+  makeVariant(students[4], {
+    name: "Riya Das",
+    dob: "2005-06-05",
+    status: "watchlist",
+    gpa: 7.9,
+    attendance: 80,
+    wellness: 74,
+    risk: 41,
+    pred: "B",
+    ready: 76,
+    note: "Capable learner whose performance dips when lab preparation is rushed.",
+    mentorNote: "Create a calmer weekly preparation rhythm ahead of practical evaluations.",
+    action: "Set one preparation block and one mentor review before every lab assessment.",
+    tags: ["lab pace", "needs rhythm", "close to lift"],
+    subjectShift: -6,
+    trendShift: -5
+  })
+];
+
+students.push(...additionalStudents);
+
+students.forEach((student, index) => {
+  student.id = makeUsn(index + 1);
+});
+
+const sportsCatalog = [
+  {
+    category: "Athletics",
+    accent: "#1f7a72",
+    events: ["Interclass 400m relay", "Annual 800m run", "Campus 5K road race", "Long jump trials", "Javelin field meet"],
+    outcomes: ["Won", "Participated", "Lost", "Won", "Participated"]
+  },
+  {
+    category: "Combat",
+    accent: "#7866d7",
+    events: ["Taekwondo sparring league", "Karate kata round", "Judo mat challenge", "Kickboxing technical bout", "Boxing conditioning trial"],
+    outcomes: ["Participated", "Won", "Lost", "Participated", "Won"]
+  },
+  {
+    category: "Adventure sports",
+    accent: "#d4a44e",
+    events: ["Rock-climbing wall event", "Trail trek expedition", "Kayaking camp circuit", "Cycling endurance ride", "Obstacle race camp"],
+    outcomes: ["Won", "Participated", "Lost", "Participated", "Won"]
+  },
+  {
+    category: "Fitness training",
+    accent: "#c65a3f",
+    events: ["Strength and conditioning assessment", "Mobility and endurance block", "Functional training cycle", "Core stability evaluation", "Cardio endurance benchmark"],
+    outcomes: ["Participated", "Won", "Participated", "Lost", "Won"]
+  }
+];
+
+const outcomeBands = {
+  Won: [84, 96],
+  Participated: [68, 83],
+  Lost: [51, 67]
 };
+
+function percentageForOutcome(result, seed) {
+  const [min, max] = outcomeBands[result];
+  return min + (seed % (max - min + 1));
+}
+
+function buildSportsRecord(index) {
+  return sportsCatalog.map((sport, sportIndex) => {
+    const event = sport.events[(index + sportIndex) % sport.events.length];
+    const result = sport.outcomes[(index * 2 + sportIndex) % sport.outcomes.length];
+    const percentage = percentageForOutcome(result, index * 7 + sportIndex * 5);
+    const summary = result === "Won"
+      ? `Participated in ${event} and won the event with a ${percentage}% performance score.`
+      : result === "Lost"
+      ? `Participated in ${event} and lost after a competitive finish with ${percentage}% performance.`
+      : `Participated in ${event} and completed the event with ${percentage}% performance.`;
+
+    return {
+      category: sport.category,
+      event,
+      summary,
+      percentage,
+      result,
+      accent: sport.accent
+    };
+  });
+}
+
+const sportsAchievements = Object.fromEntries(students.map((student, index) => [student.id, buildSportsRecord(index)]));
 
 students.forEach(student => {
   student.sports = sportsAchievements[student.id] || [];
@@ -1541,6 +1839,10 @@ const ranges = {
     pulses: [["Coach capacity", "Long-view planning works best where mentors protect recurring support blocks."], ["Assessment rhythm", "Learners recover faster when revision, wellbeing, and attendance plans are integrated."], ["Wellbeing pulse", "Stable wellbeing scores create the clearest long-range lift in GPA resilience."]]
   }
 };
+
+Object.values(ranges).forEach(range => {
+  range.learners = students.length;
+});
 
 const arcLen = 2 * Math.PI * 86;
 let rangeKey = "30d";
@@ -1828,11 +2130,14 @@ function renderSpot() {
       <div class="eyebrow">Sports achievements</div>
       <div class="sports-grid">
         ${student.sports.map(sport => `
-          <div class="sports-card" style="--sport-accent:${sport[3]}">
-            <small>${sport[0]}</small>
-            <strong>${sport[1]}</strong>
-            <p>${sport[2]}</p>
-            <span>${sport[4]}</span>
+          <div class="sports-card" style="--sport-accent:${sport.accent}">
+            <small>${sport.category}</small>
+            <strong>${sport.event}</strong>
+            <p>${sport.summary}</p>
+            <div class="sports-meta">
+              <div class="sports-score">${sport.percentage}%</div>
+              <span class="sports-result">${sport.result}</span>
+            </div>
           </div>
         `).join("")}
       </div>
@@ -1883,6 +2188,18 @@ function renderPlanner() {
       <span>${slot[2]}</span>
     </div>
   `).join("");
+}
+
+function syncDemoAccounts() {
+  document.querySelectorAll(".demo-chip").forEach((button, index) => {
+    const student = students[index];
+    if (!student) {
+      return;
+    }
+    button.dataset.usn = student.id;
+    button.dataset.dob = student.dob;
+    button.innerHTML = `<strong>${student.name}</strong><span>${student.id} - ${student.dob}</span>`;
+  });
 }
 
 function renderTable() {
@@ -2037,6 +2354,8 @@ $("loginForm").addEventListener("submit", event => {
   }
   loginStudent(student);
 });
+
+syncDemoAccounts();
 
 document.querySelectorAll(".demo-chip").forEach(button => {
   button.addEventListener("click", () => {
