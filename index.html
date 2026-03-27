@@ -218,16 +218,12 @@
   }
 
   body.logged-in.student-mode .app {
-    grid-template-columns: 1fr;
-    max-width: 1180px;
+    grid-template-columns: 248px minmax(0, 1fr);
+    max-width: 1480px;
     margin: 0 auto;
   }
 
-  body.logged-in.student-mode .rail,
-  body.logged-in.student-mode .meter,
-  body.logged-in.student-mode #actions,
-  body.logged-in.student-mode .table-wrap,
-  body.logged-in.student-mode .reg-tools {
+  body.logged-in.student-mode .panel-hub {
     display: none;
   }
 
@@ -292,10 +288,10 @@
     align-self: start;
     min-height: calc(100vh - 44px);
     border-radius: 28px;
-    padding: 18px 14px;
+    padding: 16px 12px 18px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
   }
 
   .brand {
@@ -311,10 +307,11 @@
 
   .rail nav {
     display: grid;
-    gap: 10px;
+    gap: 6px;
   }
 
-  .rail a {
+  .rail a,
+  .rail button {
     color: var(--muted);
     text-decoration: none;
     text-align: center;
@@ -325,30 +322,108 @@
     transition: 0.18s;
   }
 
+  .rail button {
+    border: none;
+    background: transparent;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    padding: 10px 12px;
+  }
+
   .rail a:hover,
-  .rail a.active {
+  .rail a.active,
+  .rail button:hover,
+  .rail button.active {
     color: var(--ink);
     background: rgba(31, 122, 114, 0.09);
     transform: translateY(-2px);
   }
 
-  .rail a b { font-size: 1.1rem; }
-  .rail a span {
-    font: 500 0.66rem "IBM Plex Mono", monospace;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .rail a b,
+  .rail button b {
+    width: 30px;
+    height: 30px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 0.82rem;
+    background: rgba(31, 122, 114, 0.08);
+    color: var(--teal);
+  }
+  .rail a span,
+  .rail button span {
+    justify-self: start;
+    font: 600 0.78rem "Manrope", sans-serif;
+    letter-spacing: 0.01em;
+    text-transform: none;
   }
 
   .rail-note {
     margin-top: auto;
-    padding: 14px;
+    padding: 14px 12px 0;
     border-top: 1px solid rgba(31, 42, 55, 0.08);
     color: var(--muted);
-    font-size: 0.92rem;
+    font-size: 0.85rem;
     line-height: 1.45;
   }
 
   .main { display: grid; gap: 22px; min-width: 0; }
+
+  .dashboard-panel:not(.active) {
+    display: none !important;
+  }
+
+  .panel-stage {
+    display: grid;
+    gap: 22px;
+  }
+
+  .panel-hub { display: none; }
+
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .hub-card {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.74);
+    color: var(--ink);
+    text-align: left;
+    padding: 18px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: 0.18s;
+    display: grid;
+    gap: 10px;
+  }
+
+  .hub-card:hover,
+  .hub-card.active {
+    transform: translateY(-3px);
+    border-color: rgba(31, 122, 114, 0.22);
+    box-shadow: 0 16px 32px rgba(79, 56, 25, 0.08);
+  }
+
+  .hub-card b {
+    font: 500 0.68rem "IBM Plex Mono", monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .hub-card strong {
+    font-size: 1.04rem;
+  }
+
+  .hub-card span {
+    color: var(--muted);
+    line-height: 1.55;
+  }
 
   .topbar,
   .hero,
@@ -1192,6 +1267,7 @@
     .hero-grid,
     .panel-grid,
     .detail-grid,
+    .hub-grid,
     .signals,
     .metrics,
     .chart-metrics,
@@ -1212,7 +1288,7 @@
     }
 
     .rail nav {
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(8, minmax(0, 1fr));
       overflow: auto;
     }
 
@@ -1265,6 +1341,11 @@
 
     .head-brand {
       width: 100%;
+    }
+
+    .panel-hub {
+      padding: 18px;
+      border-radius: 24px;
     }
 
     .hero h2 {
@@ -1364,14 +1445,16 @@
   <aside class="rail glass fade">
     <div class="brand">AS</div>
     <nav>
-      <a class="active" href="#overview"><b>01</b><span>Overview</span></a>
-      <a href="#trajectory"><b>02</b><span>Trajectory</span></a>
-      <a href="#spotlight"><b>03</b><span>Focus</span></a>
-      <a href="#actions"><b>04</b><span>Action</span></a>
-      <a href="#registry"><b>05</b><span>Registry</span></a>
-      <a href="#planner"><b>06</b><span>Planner</span></a>
+      <button class="panel-link active" data-panel-target="overview" type="button"><b>01</b><span>Overview</span></button>
+      <button class="panel-link" data-panel-target="progress" type="button"><b>02</b><span>Progress</span></button>
+      <button class="panel-link" data-panel-target="portrait" type="button"><b>03</b><span>Portrait</span></button>
+      <button class="panel-link" data-panel-target="actions" type="button"><b>04</b><span>Action</span></button>
+      <button class="panel-link" data-panel-target="performance" type="button"><b>05</b><span>Activities</span></button>
+      <button class="panel-link" data-panel-target="profile" type="button"><b>06</b><span>Profile</span></button>
+      <button class="panel-link" data-panel-target="academics" type="button"><b>07</b><span>Faculty</span></button>
+      <button class="panel-link" data-panel-target="registry" type="button"><b>08</b><span>Registry</span></button>
     </nav>
-    <div class="rail-note">Elegant student intelligence dashboard with a lighter editorial style and linked interactions.</div>
+    <div class="rail-note">Choose a panel to open only that dashboard workspace, so every area is available with a single click instead of long scrolling.</div>
   </aside>
 
   <main class="main">
@@ -1388,7 +1471,27 @@
       </div>
     </section>
 
-    <section class="hero-grid" id="overview">
+    <section class="panel-hub glass fade" style="animation-delay:.04s">
+      <div class="reg-head">
+        <div>
+          <div class="eyebrow">Panel workspace</div>
+          <h3>Open each dashboard as a separate panel</h3>
+          <p>Click any panel below or use the left rail to focus on one dashboard area at a time.</p>
+        </div>
+      </div>
+      <div class="hub-grid">
+        <button class="hub-card active" data-panel-target="overview" type="button"><b>01</b><strong>Overview</strong><span>Hero summary, cohort meter, key metrics, and signal story.</span></button>
+        <button class="hub-card" data-panel-target="progress" type="button"><b>02</b><strong>Your Progress Arc</strong><span>Open the chart panel and trend metrics only.</span></button>
+        <button class="hub-card" data-panel-target="portrait" type="button"><b>03</b><strong>Training Portrait</strong><span>See the learner snapshot, tags, and personal summary.</span></button>
+        <button class="hub-card" data-panel-target="actions" type="button"><b>04</b><strong>Action Lane</strong><span>Review intervention rhythm and mentor action items.</span></button>
+        <button class="hub-card" data-panel-target="performance" type="button"><b>05</b><strong>Activities</strong><span>Check club, sports, cultural, inter and intra performance.</span></button>
+        <button class="hub-card" data-panel-target="profile" type="button"><b>06</b><strong>Student Profile</strong><span>Identity, contact details, address, section, year, and CGPA.</span></button>
+        <button class="hub-card" data-panel-target="academics" type="button"><b>07</b><strong>Subjects and Faculty</strong><span>View subject allocations and allotted professors.</span></button>
+        <button class="hub-card" data-panel-target="registry" type="button"><b>08</b><strong>Registry and Planner</strong><span>Browse learner records and open the day plan workspace.</span></button>
+      </div>
+    </section>
+
+    <section class="hero-grid dashboard-panel active" id="overviewPanel" data-panel="overview">
       <article class="hero glass fade" style="animation-delay:.08s">
         <div class="hero-top">
           <div>
@@ -1441,7 +1544,7 @@
       </article>
     </section>
 
-    <section class="panel-grid">
+    <section class="panel-stage dashboard-panel" id="progressPanel" data-panel="progress">
       <article class="panel glass fade" id="trajectory" style="animation-delay:.24s">
         <div class="head">
           <div class="head-brand">
@@ -1457,7 +1560,9 @@
           <div class="stat"><small id="cLabel3">Engagement lift</small><strong id="cEngage">+4.1 pts</strong></div>
         </div>
       </article>
+    </section>
 
+    <section class="panel-stage dashboard-panel" id="portraitPanel" data-panel="portrait">
       <article class="panel glass fade" id="spotlight" style="animation-delay:.32s">
         <div class="head">
           <div class="head-brand">
@@ -1467,7 +1572,9 @@
         </div>
         <div class="spot" id="spot"></div>
       </article>
+    </section>
 
+    <section class="panel-stage dashboard-panel" id="actionsPanel" data-panel="actions">
       <article class="panel glass fade" id="actions" style="animation-delay:.4s">
         <div class="head"><div><div class="eyebrow">Action lane</div><h3>Intervention rhythm</h3><p>Next best actions appear as soon as the selected learner changes.</p></div></div>
         <div class="pulse-grid" id="pulseGrid"></div>
@@ -1475,7 +1582,7 @@
       </article>
     </section>
 
-    <section class="detail-grid">
+    <section class="panel-stage dashboard-panel" id="performancePanel" data-panel="performance">
       <article class="panel glass fade" id="performanceProfile" style="animation-delay:.44s">
         <div class="head">
           <div><div class="eyebrow">Performance profile</div><h3>Activity performance graph</h3><p id="activitySummary">Track club, sports, cultural, inter-college, and intra-college performance with event and venue context.</p></div>
@@ -1496,20 +1603,24 @@
           <div class="activity-list" id="activityList"></div>
         </div>
       </article>
+    </section>
 
+    <section class="panel-stage dashboard-panel" id="profilePanel" data-panel="profile">
       <article class="panel glass fade" id="studentProfileCard" style="animation-delay:.52s">
         <div class="head"><div><div class="eyebrow">Student profile</div><h3>Identity and contact details</h3><p id="profileSummary">Section, year, last semester CGPA, and family contact information for the selected learner.</p></div></div>
         <div class="identity-grid" id="identityGrid"></div>
         <div class="contact-grid" id="contactGrid"></div>
       </article>
+    </section>
 
+    <section class="panel-stage dashboard-panel" id="academicsPanel" data-panel="academics">
       <article class="panel glass fade detail-wide" id="academics" style="animation-delay:.6s">
         <div class="head"><div><div class="eyebrow">Academic allocation</div><h3>Subjects and allotted professors</h3><p id="facultySummary">All subject allocations with faculty role, section ownership, and department details.</p></div></div>
         <div class="faculty-list" id="facultyList"></div>
       </article>
     </section>
 
-    <section class="registry glass fade" id="registry" style="animation-delay:.48s">
+    <section class="registry glass fade dashboard-panel" id="registry" data-panel="registry" style="animation-delay:.48s">
       <div class="reg-head">
         <div><div class="eyebrow">Registry</div><h3 id="registryTitle">Student roster with live filters</h3><p id="registryCount">6 learners available in the current studio view.</p></div>
         <div class="reg-tools">
@@ -1843,6 +1954,7 @@ const arcLen = 2 * Math.PI * 86;
 let rangeKey = "30d";
 let filterKey = "all";
 let activeId = students[0].id;
+let activePanelKey = "overview";
 let activityFilter = "all";
 let activityHoverIndex = -1;
 let activityBars = [];
@@ -2005,6 +2117,9 @@ function drawChart() {
   const ctx = canvas.getContext("2d");
   const dpr = window.devicePixelRatio || 1;
   const width = canvas.clientWidth;
+  if (!width) {
+    return;
+  }
   const height = 280;
   canvas.width = width * dpr;
   canvas.height = height * dpr;
@@ -2450,10 +2565,28 @@ function renderAll() {
   renderFacultyList();
   drawChart();
   drawActivityChart();
+  setActivePanel(activePanelKey);
+}
+
+function setActivePanel(panelKey) {
+  activePanelKey = panelKey;
+  document.querySelectorAll(".dashboard-panel").forEach(panel => {
+    panel.classList.toggle("active", panel.dataset.panel === panelKey);
+  });
+  document.querySelectorAll(".panel-link, .hub-card").forEach(button => {
+    button.classList.toggle("active", button.dataset.panelTarget === panelKey);
+  });
+  if (panelKey === "progress") {
+    requestAnimationFrame(drawChart);
+  }
+  if (panelKey === "performance") {
+    requestAnimationFrame(drawActivityChart);
+  }
 }
 
 function loginStudent(student) {
   activeId = student.id;
+  activePanelKey = "overview";
   document.body.classList.add("logged-in", "student-mode");
   $("usnInput").value = student.id;
   $("dobInput").value = student.dob;
@@ -2529,6 +2662,13 @@ document.querySelectorAll(".activity-filter").forEach(button => {
     renderPerformanceProfile();
     drawActivityChart();
     updateActivityTooltip(-1);
+  });
+});
+
+document.querySelectorAll(".panel-link, .hub-card").forEach(button => {
+  button.addEventListener("click", () => {
+    setActivePanel(button.dataset.panelTarget);
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   });
 });
 
