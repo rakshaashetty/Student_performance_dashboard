@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scholar Atelier Student Dashboard</title>
+<title>Scholar Atelier Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -238,6 +238,10 @@
 
   body.logged-in.student-mode .panel-grid {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  }
+
+  body.logged-in.student-mode .detail-grid {
+    grid-template-columns: 1fr;
   }
 
   body.logged-in.student-mode .signals {
@@ -502,6 +506,73 @@
     flex-wrap: wrap;
   }
 
+  .head-brand {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .logo-3d {
+    position: relative;
+    width: 76px;
+    height: 76px;
+    flex: 0 0 auto;
+    border-radius: 26px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(240, 246, 243, 0.74));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 24px 36px rgba(31, 42, 55, 0.12);
+    transform-style: preserve-3d;
+  }
+
+  .logo-3d::before,
+  .logo-3d::after,
+  .logo-3d span {
+    content: "";
+    position: absolute;
+    border-radius: 18px;
+    inset: 12px;
+    transform: perspective(180px) rotateX(64deg) rotateZ(45deg);
+  }
+
+  .logo-3d::before {
+    inset: 8px;
+    background: linear-gradient(135deg, #1f7a72, #88a889);
+    box-shadow: 0 16px 24px rgba(31, 122, 114, 0.22);
+  }
+
+  .logo-3d::after {
+    inset: 18px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 247, 233, 0.92));
+    box-shadow: inset 0 0 0 1px rgba(31, 42, 55, 0.08);
+  }
+
+  .logo-3d span {
+    inset: 28px;
+    background: linear-gradient(135deg, #d4a44e, #7866d7);
+    box-shadow: 0 10px 18px rgba(120, 102, 215, 0.22);
+  }
+
+  .logo-hero {
+    margin-bottom: 18px;
+  }
+
+  .logo-mini {
+    width: 56px;
+    height: 56px;
+    border-radius: 20px;
+  }
+
+  .logo-mini::before {
+    inset: 7px;
+  }
+
+  .logo-mini::after {
+    inset: 14px;
+  }
+
+  .logo-mini span {
+    inset: 21px;
+  }
+
   .hero h2 {
     font-size: clamp(2.3rem, 4.2vw, 4.2rem);
     max-width: 34rem;
@@ -608,8 +679,7 @@
   .actions,
   .slots,
   .pulse-grid,
-  .spot,
-  .sports-grid {
+  .spot {
     display: grid;
     gap: 12px;
   }
@@ -724,6 +794,16 @@
     gap: 22px;
   }
 
+  .detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+    gap: 22px;
+  }
+
+  .detail-wide {
+    grid-column: 1 / -1;
+  }
+
   .panel {
     display: grid;
     gap: 16px;
@@ -762,6 +842,33 @@
 
   .chart-metrics,
   .stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .identity-grid,
+  .contact-grid,
+  .profile-band,
+  .activity-list,
+  .faculty-list,
+  .faculty-grid,
+  .activity-meta {
+    display: grid;
+    gap: 12px;
+  }
+
+  .identity-grid,
+  .contact-grid,
+  .faculty-grid,
+  .profile-band {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .activity-list,
+  .faculty-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .profile-band {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -812,72 +919,104 @@
     border: 1px solid var(--line);
   }
 
-  .sports-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .sports-card {
-    position: relative;
-    display: grid;
-    gap: 8px;
-    padding: 16px;
+  .info-card,
+  .contact-card,
+  .activity-card,
+  .faculty-card {
+    padding: 16px 18px;
     border-radius: 22px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(249, 245, 238, 0.72));
-    border: 1px solid rgba(31, 42, 55, 0.08);
-    overflow: hidden;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--line);
   }
 
-  .sports-card::before {
-    content: "";
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 4px;
-    background: var(--sport-accent, var(--teal));
-  }
-
-  .sports-card small {
+  .info-card small,
+  .contact-card small,
+  .activity-card small,
+  .faculty-card small {
+    display: block;
     color: var(--muted);
+    margin-bottom: 7px;
     font: 500 0.68rem "IBM Plex Mono", monospace;
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
-  .sports-card strong {
+  .info-card strong,
+  .contact-card strong,
+  .activity-card strong,
+  .faculty-card strong {
+    display: block;
     font-size: 1rem;
-    line-height: 1.35;
+    line-height: 1.4;
   }
 
-  .sports-card p {
+  .info-card span,
+  .contact-card span,
+  .activity-card span,
+  .faculty-card span {
     color: var(--muted);
-    font-size: 0.9rem;
     line-height: 1.55;
   }
 
-  .sports-meta {
+  .activity-shell {
+    display: grid;
+    gap: 14px;
+  }
+
+  .activity-chart-wrap {
+    position: relative;
+  }
+
+  .activity-switch {
+    justify-content: flex-start;
+  }
+
+  .activity-header,
+  .faculty-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
   }
 
-  .sports-score {
-    color: var(--sport-accent, var(--teal));
-    font: 700 1rem "Fraunces", serif;
-    letter-spacing: -0.02em;
+  .activity-meta,
+  .faculty-grid {
+    margin-top: 12px;
   }
 
-  .sports-result {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 12px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(31, 42, 55, 0.08);
-    color: var(--sport-accent, var(--teal));
-    font: 600 0.72rem "IBM Plex Mono", monospace;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+  .chart-tooltip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    min-width: 220px;
+    max-width: min(280px, calc(100% - 12px));
+    padding: 12px 14px;
+    border-radius: 18px;
+    background: rgba(31, 42, 55, 0.94);
+    color: #fff;
+    pointer-events: none;
+    transform: translate(-50%, calc(-100% - 14px));
+    opacity: 0;
+    transition: opacity 0.16s ease;
+    box-shadow: 0 18px 34px rgba(31, 42, 55, 0.28);
+    z-index: 2;
+  }
+
+  .chart-tooltip.show {
+    opacity: 1;
+  }
+
+  .chart-tooltip strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+  }
+
+  .chart-tooltip span {
+    display: block;
+    color: rgba(255, 255, 255, 0.82);
+    line-height: 1.5;
+    font-size: 0.84rem;
   }
 
   .subject {
@@ -1052,11 +1191,18 @@
     .app,
     .hero-grid,
     .panel-grid,
+    .detail-grid,
     .signals,
     .metrics,
     .chart-metrics,
     .stats,
-    .registry-grid {
+    .registry-grid,
+    .identity-grid,
+    .contact-grid,
+    .profile-band,
+    .activity-list,
+    .faculty-list,
+    .faculty-grid {
       grid-template-columns: 1fr;
     }
 
@@ -1117,6 +1263,10 @@
       flex: 1 1 auto;
     }
 
+    .head-brand {
+      width: 100%;
+    }
+
     .hero h2 {
       font-size: 2.4rem;
     }
@@ -1133,10 +1283,6 @@
     }
 
     body.logged-in.student-mode .signal-list {
-      grid-template-columns: 1fr;
-    }
-
-    .sports-grid {
       grid-template-columns: 1fr;
     }
 
@@ -1173,8 +1319,9 @@
 <section class="login-shell">
   <div class="login-card glass">
     <div class="login-panel">
+      <div class="logo-3d logo-hero" aria-hidden="true"><span></span></div>
       <div class="eyebrow">Student Login</div>
-      <h1><span>Scholar</span> access through USN and date of birth.</h1>
+      <h1><span>MCE Fusion</span></h1>
       <p>This version is simplified to feel cleaner and more focused. Once signed in, the dashboard centers on the student's own progress, subjects, and day plan.</p>
       <div class="login-list">
         <div class="login-item"><strong>Cleaner layout</strong><span>Less visual clutter, fewer competing panels, and a more direct academic summary.</span></div>
@@ -1204,9 +1351,9 @@
 
       <div class="helper-text">Demo accounts for testing:</div>
       <div class="demo-row">
-        <button class="demo-chip" type="button" data-usn="4MCE26CS001" data-dob="2005-04-12"><strong>Krishnan</strong><span>4MCE26CS001 - 2005-04-12</span></button>
-        <button class="demo-chip" type="button" data-usn="4MCE26CS002" data-dob="2005-02-26"><strong>Rohan Mehta</strong><span>4MCE26CS002 - 2005-02-26</span></button>
-        <button class="demo-chip" type="button" data-usn="4MCE26CS003" data-dob="2004-11-03"><strong>Priya Nair</strong><span>4MCE26CS003 - 2004-11-03</span></button>
+        <button class="demo-chip" type="button" data-usn="4MC23CS001" data-dob="2005-04-12"><strong>Krishnan</strong><span>4MC23CS001 - 2005-04-12</span></button>
+        <button class="demo-chip" type="button" data-usn="4MC23CS002" data-dob="2004-11-03"><strong>Priya Nair</strong><span>4MC23CS002 - 2004-11-03</span></button>
+        <button class="demo-chip" type="button" data-usn="4MC23CS003" data-dob="2004-08-19"><strong>Vikram Sinha</strong><span>4MC23CS003 - 2004-08-19</span></button>
       </div>
       <div class="login-error" id="loginError"></div>
     </div>
@@ -1297,7 +1444,10 @@
     <section class="panel-grid">
       <article class="panel glass fade" id="trajectory" style="animation-delay:.24s">
         <div class="head">
-          <div><div class="eyebrow">Trajectory lab</div><h3 id="trajectoryTitle">Campus vs selected learner</h3><p id="chartText">The selected learner is moving in step with a healthier campus baseline.</p></div>
+          <div class="head-brand">
+            <div class="logo-3d logo-mini" aria-hidden="true"><span></span></div>
+            <div><div class="eyebrow">Trajectory lab</div><h3 id="trajectoryTitle">Campus vs selected learner</h3><p id="chartText">The selected learner is moving in step with a healthier campus baseline.</p></div>
+          </div>
           <div class="legend"><span><i style="background:#88a889"></i>Campus pulse</span><span><i style="background:#d4a44e"></i>Selected learner</span></div>
         </div>
         <div class="chart-box"><canvas id="chart" height="280"></canvas></div>
@@ -1309,7 +1459,12 @@
       </article>
 
       <article class="panel glass fade" id="spotlight" style="animation-delay:.32s">
-        <div class="head"><div><div class="eyebrow">Learner spotlight</div><h3>Personal learning portrait</h3><p>Click any row in the registry and the spotlight, chart, and planner update together.</p></div></div>
+        <div class="head">
+          <div class="head-brand">
+            <div class="logo-3d logo-mini" aria-hidden="true"><span></span></div>
+            <div><div class="eyebrow">Learner spotlight</div><h3>Personal training portrait</h3><p>Click any row in the registry and the spotlight, chart, and planner update together.</p></div>
+          </div>
+        </div>
         <div class="spot" id="spot"></div>
       </article>
 
@@ -1320,9 +1475,43 @@
       </article>
     </section>
 
+    <section class="detail-grid">
+      <article class="panel glass fade" id="performanceProfile" style="animation-delay:.44s">
+        <div class="head">
+          <div><div class="eyebrow">Performance profile</div><h3>Activity performance graph</h3><p id="activitySummary">Track club, sports, cultural, inter-college, and intra-college performance with event and venue context.</p></div>
+          <div class="filters activity-switch">
+            <button class="activity-filter active" data-activity="all" type="button">All</button>
+            <button class="activity-filter" data-activity="club" type="button">Club</button>
+            <button class="activity-filter" data-activity="sports" type="button">Sports</button>
+            <button class="activity-filter" data-activity="cultural" type="button">Cultural</button>
+            <button class="activity-filter" data-activity="inter" type="button">Inter</button>
+            <button class="activity-filter" data-activity="intra" type="button">Intra</button>
+          </div>
+        </div>
+        <div class="activity-shell">
+          <div class="chart-box activity-chart-wrap">
+            <canvas id="activityChart" height="280"></canvas>
+            <div class="chart-tooltip" id="activityTooltip"></div>
+          </div>
+          <div class="activity-list" id="activityList"></div>
+        </div>
+      </article>
+
+      <article class="panel glass fade" id="studentProfileCard" style="animation-delay:.52s">
+        <div class="head"><div><div class="eyebrow">Student profile</div><h3>Identity and contact details</h3><p id="profileSummary">Section, year, last semester CGPA, and family contact information for the selected learner.</p></div></div>
+        <div class="identity-grid" id="identityGrid"></div>
+        <div class="contact-grid" id="contactGrid"></div>
+      </article>
+
+      <article class="panel glass fade detail-wide" id="academics" style="animation-delay:.6s">
+        <div class="head"><div><div class="eyebrow">Academic allocation</div><h3>Subjects and allotted professors</h3><p id="facultySummary">All subject allocations with faculty role, section ownership, and department details.</p></div></div>
+        <div class="faculty-list" id="facultyList"></div>
+      </article>
+    </section>
+
     <section class="registry glass fade" id="registry" style="animation-delay:.48s">
       <div class="reg-head">
-        <div><div class="eyebrow">Registry</div><h3 id="registryTitle">Student roster with live filters</h3><p id="registryCount">20 learners available in the current studio view.</p></div>
+        <div><div class="eyebrow">Registry</div><h3 id="registryTitle">Student roster with live filters</h3><p id="registryCount">6 learners available in the current studio view.</p></div>
         <div class="reg-tools">
           <label class="search"><span class="muted">Search</span><input id="search" type="search" placeholder="Search by learner or department"></label>
           <div class="filters">
@@ -1353,7 +1542,7 @@
 <script>
 const students = [
   {
-    id: "4MCE26CS001",
+    id: "4MC23CS001",
     name: "Krishnan",
     dob: "2005-04-12",
     dept: "Computer Science",
@@ -1374,7 +1563,7 @@ const students = [
     trends: { "30d": [80, 82, 84, 83, 87, 90], "90d": [74, 76, 78, 79, 82, 86], "180d": [70, 72, 75, 77, 81, 85] }
   },
   {
-    id: "4MCE26CS002",
+    id: "4MC23CS004",
     name: "Rohan Mehta",
     dob: "2005-02-26",
     dept: "Electronics",
@@ -1395,7 +1584,7 @@ const students = [
     trends: { "30d": [63, 66, 67, 65, 69, 71], "90d": [60, 61, 64, 63, 66, 69], "180d": [58, 60, 61, 63, 65, 68] }
   },
   {
-    id: "4MCE26CS003",
+    id: "4MC23CS002",
     name: "Priya Nair",
     dob: "2004-11-03",
     dept: "Data Science",
@@ -1416,7 +1605,7 @@ const students = [
     trends: { "30d": [78, 81, 82, 84, 86, 88], "90d": [72, 74, 77, 80, 83, 86], "180d": [68, 70, 73, 76, 80, 84] }
   },
   {
-    id: "4MCE26CS004",
+    id: "4MC23CS003",
     name: "Vikram Sinha",
     dob: "2004-08-19",
     dept: "Mechanical",
@@ -1437,7 +1626,7 @@ const students = [
     trends: { "30d": [60, 58, 57, 55, 53, 52], "90d": [65, 63, 61, 58, 56, 54], "180d": [70, 67, 64, 61, 57, 54] }
   },
   {
-    id: "4MCE26CS005",
+    id: "4MC23CS005",
     name: "Kavya Reddy",
     dob: "2005-01-14",
     dept: "Biotechnology",
@@ -1458,7 +1647,7 @@ const students = [
     trends: { "30d": [75, 77, 80, 82, 84, 86], "90d": [71, 73, 75, 78, 81, 84], "180d": [67, 69, 72, 75, 79, 82] }
   },
   {
-    id: "4MCE26CS006",
+    id: "4MC23CS006",
     name: "Rahul Gupta",
     dob: "2004-09-07",
     dept: "Mechanical",
@@ -1480,326 +1669,136 @@ const students = [
   }
 ];
 
-const cloneSchedule = schedule => schedule.map(slot => [...slot]);
-const cloneSubjects = subjects => subjects.map(subject => [...subject]);
-const cloneTrends = trends => Object.fromEntries(Object.entries(trends).map(([key, values]) => [key, [...values]]));
-const shiftTrends = (trends, delta) => Object.fromEntries(Object.entries(trends).map(([key, values]) => [key, values.map(value => Math.max(45, Math.min(98, value + delta)))]));
-const adjustSubjects = (subjects, delta) => subjects.map(subject => [subject[0], Math.max(45, Math.min(98, subject[1] + delta)), subject[2]]);
-const makeUsn = index => `4MCE26CS${String(index).padStart(3, "0")}`;
-
-function makeVariant(template, overrides = {}) {
-  const { tags, schedule, subjects, trends, subjectShift = 0, trendShift = 0, ...rest } = overrides;
-  return {
-    ...template,
-    ...rest,
-    tags: tags ? [...tags] : [...template.tags],
-    schedule: schedule ? cloneSchedule(schedule) : cloneSchedule(template.schedule),
-    subjects: subjects ? cloneSubjects(subjects) : adjustSubjects(template.subjects, subjectShift),
-    trends: trends ? cloneTrends(trends) : shiftTrends(template.trends, trendShift)
-  };
-}
-
-const additionalStudents = [
-  makeVariant(students[0], {
-    name: "Ananya Rao",
-    dob: "2005-06-18",
-    gpa: 8.9,
-    attendance: 93,
-    wellness: 86,
-    risk: 14,
-    pred: "A-",
-    ready: 88,
-    note: "Reliable problem-solver with calm delivery in lab reviews.",
-    mentorNote: "Build speaking confidence during project demos while keeping strong coding rhythm.",
-    action: "Assign one capstone presentation slot and keep advanced problem sets in her weekly plan.",
-    tags: ["steady performer", "presentation growth", "lab lead"],
-    subjectShift: -1,
-    trendShift: -1
-  }),
-  makeVariant(students[1], {
-    name: "Arjun Patel",
-    dob: "2005-03-11",
-    gpa: 7.6,
-    attendance: 74,
-    wellness: 65,
-    risk: 52,
-    pred: "B",
-    ready: 71,
-    note: "Shows solid understanding in lab reviews but still needs stronger weekly pacing.",
-    mentorNote: "Convert late starts into a fixed preparation routine before every practical block.",
-    action: "Add one supervised revision lab and one attendance checkpoint per week.",
-    tags: ["lab potential", "needs pacing", "recoverable"],
-    subjectShift: 2,
-    trendShift: 2
-  }),
-  makeVariant(students[2], {
-    name: "Neha Joseph",
-    dob: "2004-12-02",
-    gpa: 8.7,
-    attendance: 92,
-    wellness: 84,
-    risk: 16,
-    pred: "A-",
-    ready: 87,
-    note: "Strong analytical learner who benefits from collaborative model reviews.",
-    mentorNote: "Push for more visible ownership during team presentations and sprint demos.",
-    action: "Let her lead one analytics walkthrough each fortnight.",
-    tags: ["analysis strength", "quiet leader", "clear thinker"],
-    subjectShift: -1,
-    trendShift: -1
-  }),
-  makeVariant(students[4], {
-    name: "Meera Joshi",
-    dob: "2005-05-09",
-    gpa: 8.4,
-    attendance: 90,
-    wellness: 83,
-    risk: 18,
-    pred: "A-",
-    ready: 84,
-    note: "Balances lab work well and adapts quickly to research-heavy assignments.",
-    mentorNote: "Introduce one stretch experiment each cycle without overloading core work.",
-    action: "Move her toward guided mini-research outputs with weekly review notes.",
-    tags: ["balanced learner", "research growth", "steady pace"],
-    subjectShift: -2,
-    trendShift: -2
-  }),
-  makeVariant(students[3], {
-    name: "Nikhil Dsouza",
-    dob: "2004-10-22",
-    gpa: 6.2,
-    attendance: 66,
-    wellness: 58,
-    risk: 76,
-    pred: "C",
-    ready: 57,
-    note: "Needs regular structure and rapid mentor follow-up to stabilize performance.",
-    mentorNote: "Keep goals short, measurable, and visible after each support meeting.",
-    action: "Create a 10-day recovery sheet with practical attendance and workshop targets.",
-    tags: ["needs structure", "mentor intensive", "urgent recovery"],
-    subjectShift: 3,
-    trendShift: 3
-  }),
-  makeVariant(students[0], {
-    name: "Sana Khan",
-    dob: "2005-07-03",
-    status: "watchlist",
-    gpa: 7.8,
-    attendance: 76,
-    wellness: 72,
-    risk: 46,
-    pred: "B",
-    ready: 74,
-    mentor: "Prof. Meera Rao",
-    note: "Good coding instincts, but momentum drops whenever projects and tests overlap.",
-    mentorNote: "Protect deep work time and reduce the last-minute switch between tasks.",
-    action: "Set two fixed DSA revision blocks and one project checkpoint each week.",
-    tags: ["high potential", "needs rhythm", "project pressure"],
-    subjectShift: -8,
-    trendShift: -7
-  }),
-  makeVariant(students[2], {
-    name: "Pooja Menon",
-    dob: "2005-01-27",
-    gpa: 8.6,
-    attendance: 91,
-    wellness: 86,
-    risk: 15,
-    pred: "A-",
-    ready: 86,
-    note: "Comfortable with data interpretation and improving fast in review discussions.",
-    mentorNote: "Shift her from support role to visible presenter during team analytics demos.",
-    action: "Schedule one public walkthrough of model decisions every sprint.",
-    tags: ["presentation lift", "strong reasoning", "steady arc"],
-    subjectShift: -2,
-    trendShift: -1
-  }),
-  makeVariant(students[1], {
-    name: "Aditya Verma",
-    dob: "2005-04-30",
-    gpa: 7.1,
-    attendance: 72,
-    wellness: 64,
-    risk: 55,
-    pred: "B-",
-    ready: 68,
-    note: "Can recover quickly when work is chunked into smaller lab and revision milestones.",
-    mentorNote: "Reduce unplanned absences by locking in a clear pre-lab ritual.",
-    action: "Pair each major lab with one rehearsal block and a mentor check-in.",
-    tags: ["late starter", "practical learner", "needs planning"],
-    subjectShift: -1,
-    trendShift: -1
-  }),
-  makeVariant(students[5], {
-    name: "Harshith Gowda",
-    dob: "2004-12-14",
-    gpa: 7.0,
-    attendance: 77,
-    wellness: 68,
-    risk: 48,
-    pred: "B-",
-    ready: 70,
-    note: "Performs better when mock tests are spaced out and reviewed immediately.",
-    mentorNote: "Turn his practical confidence into steadier written responses before exams.",
-    action: "Add one timed drill and one short review reflection before each assessment.",
-    tags: ["practical confidence", "needs review", "recoverable"],
-    subjectShift: -1,
-    trendShift: -2
-  }),
-  makeVariant(students[4], {
-    name: "Sneha Kulkarni",
-    dob: "2005-02-08",
-    gpa: 8.9,
-    attendance: 94,
-    wellness: 88,
-    risk: 11,
-    pred: "A",
-    ready: 90,
-    note: "Consistent learner with strong lab discipline and calm follow-through.",
-    mentorNote: "Give her stretch opportunities that include peer mentoring in the lab.",
-    action: "Assign one guided mentoring slot during the next research cycle.",
-    tags: ["mentor ready", "lab anchor", "strong follow-through"],
-    subjectShift: 1,
-    trendShift: 1
-  }),
-  makeVariant(students[0], {
-    name: "Varun Shetty",
-    dob: "2005-08-16",
-    gpa: 9.0,
-    attendance: 95,
-    wellness: 87,
-    risk: 10,
-    pred: "A",
-    ready: 90,
-    note: "Fast learner with dependable submission quality across technical modules.",
-    mentorNote: "Channel his speed into mentoring without letting his own depth of work slip.",
-    action: "Offer him one peer-review leadership slot alongside advanced lab tasks.",
-    tags: ["fast learner", "peer support", "consistent output"],
-    subjectShift: 0,
-    trendShift: 0
-  }),
-  makeVariant(students[2], {
-    name: "Keerthana Pai",
-    dob: "2005-03-25",
-    gpa: 8.5,
-    attendance: 90,
-    wellness: 82,
-    risk: 18,
-    pred: "A-",
-    ready: 85,
-    note: "Strong modeler who responds well to structured critique and rehearsal time.",
-    mentorNote: "Build confidence by giving her ownership over one complete review narrative.",
-    action: "Place her on the next demo review panel with one formal speaking slot.",
-    tags: ["clear thinker", "modeling growth", "review ready"],
-    subjectShift: -2,
-    trendShift: -2
-  }),
-  makeVariant(students[3], {
-    name: "Manav Bhat",
-    dob: "2004-11-19",
-    gpa: 6.0,
-    attendance: 64,
-    wellness: 56,
-    risk: 82,
-    pred: "C",
-    ready: 54,
-    note: "Needs immediate academic structure before slipping into a deeper attendance decline.",
-    mentorNote: "Keep interventions frequent, simple, and reinforced with visible milestones.",
-    action: "Start a same-week recovery ladder across attendance, lab submissions, and mentor contact.",
-    tags: ["critical", "needs intervention", "low confidence"],
-    subjectShift: 1,
-    trendShift: 1
-  }),
-  makeVariant(students[4], {
-    name: "Riya Das",
-    dob: "2005-06-05",
-    status: "watchlist",
-    gpa: 7.9,
-    attendance: 80,
-    wellness: 74,
-    risk: 41,
-    pred: "B",
-    ready: 76,
-    note: "Capable learner whose performance dips when lab preparation is rushed.",
-    mentorNote: "Create a calmer weekly preparation rhythm ahead of practical evaluations.",
-    action: "Set one preparation block and one mentor review before every lab assessment.",
-    tags: ["lab pace", "needs rhythm", "close to lift"],
-    subjectShift: -6,
-    trendShift: -5
-  })
-];
-
-students.push(...additionalStudents);
-
-students.forEach((student, index) => {
-  student.id = makeUsn(index + 1);
-});
-
-const sportsCatalog = [
-  {
-    category: "Athletics",
-    accent: "#1f7a72",
-    events: ["Interclass 400m relay", "Annual 800m run", "Campus 5K road race", "Long jump trials", "Javelin field meet"],
-    outcomes: ["Won", "Participated", "Lost", "Won", "Participated"]
+const studentExtensions = {
+  "4MC23CS001": {
+    section: "A",
+    year: "Second Year",
+    address: "Jayanagar 4th Block, Bengaluru, Karnataka",
+    studentPhone: "+91 98450 11204",
+    parentPhone: "+91 99802 77114",
+    lastSemester: { sem: 2, cgpa: 8.94 },
+    activities: [
+      { category: "club", event: "CodeForge Student Club Sprint", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Lead presenter", performance: 94, note: "Led the debugging and deployment round." },
+      { category: "sports", event: "Inter Section Table Tennis Meet", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Semifinalist", performance: 82, note: "Consistent quick-reaction match play." },
+      { category: "cultural", event: "Fusion Beats Ensemble", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Stage performer", performance: 86, note: "Performed in the annual cultural opening set." },
+      { category: "inter", event: "State Smart India Mini Hack", college: "MITE Mangaluru", place: "Mangaluru, Karnataka", level: "Runner-up", performance: 91, note: "Built a campus navigation prototype." },
+      { category: "intra", event: "Intra College Project Expo", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Winner", performance: 95, note: "Top score in systems demo and viva." }
+    ],
+    subjectDetails: [
+      { name: "Programming", code: "CS201", faculty: "Prof. Meera Rao", designation: "Assistant Professor, Department of Computer Science", post: "Section A Faculty Advisor", room: "Block C, Room 214", email: "meera.rao@mce.edu", performance: 95, color: "#1f7a72" },
+      { name: "DSA", code: "CS203", faculty: "Dr. Arvind Prakash", designation: "Associate Professor, Department of Computer Science", post: "Academic Coordinator", room: "Block C, Room 302", email: "arvind.prakash@mce.edu", performance: 91, color: "#d4a44e" },
+      { name: "DBMS", code: "CS205", faculty: "Prof. Shreya Kulkarni", designation: "Assistant Professor, Department of Computer Science", post: "Database Lab Incharge", room: "Data Systems Lab", email: "shreya.kulkarni@mce.edu", performance: 87, color: "#7866d7" },
+      { name: "Networks", code: "CS207", faculty: "Dr. Vivek Hegde", designation: "Professor, Department of Computer Science", post: "Department Timetable Coordinator", room: "Block C, Room 318", email: "vivek.hegde@mce.edu", performance: 85, color: "#88a889" }
+    ]
   },
-  {
-    category: "Combat",
-    accent: "#7866d7",
-    events: ["Taekwondo sparring league", "Karate kata round", "Judo mat challenge", "Kickboxing technical bout", "Boxing conditioning trial"],
-    outcomes: ["Participated", "Won", "Lost", "Participated", "Won"]
+  "4MC23CS004": {
+    section: "B",
+    year: "Second Year",
+    address: "Vijayanagar 2nd Stage, Mysuru, Karnataka",
+    studentPhone: "+91 99008 41267",
+    parentPhone: "+91 96119 55742",
+    lastSemester: { sem: 2, cgpa: 7.12 },
+    activities: [
+      { category: "club", event: "Robotics Club Buildathon", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Prototype finalist", performance: 74, note: "Completed the control board debugging module." },
+      { category: "sports", event: "Badminton Ladder Series", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Quarterfinalist", performance: 68, note: "Showed better consistency in the final rounds." },
+      { category: "cultural", event: "Technical Skit Showcase", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Performer", performance: 71, note: "Handled the narration and timing blocks." },
+      { category: "inter", event: "Embedded Design Challenge", college: "NIE Mysuru", place: "Mysuru, Karnataka", level: "Participant", performance: 66, note: "Presented a microcontroller demo." },
+      { category: "intra", event: "Electronics Debug League", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Top 5 finish", performance: 73, note: "Recovered points in the practical round." }
+    ],
+    subjectDetails: [
+      { name: "Circuits", code: "EC201", faculty: "Dr. Kavita Sen", designation: "Associate Professor, Department of Electronics", post: "Class Mentor", room: "ECE Block, Room 108", email: "kavita.sen@mce.edu", performance: 68, color: "#c65a3f" },
+      { name: "Signals", code: "EC203", faculty: "Prof. Nisha Bhat", designation: "Assistant Professor, Department of Electronics", post: "Section B Course Coordinator", room: "ECE Block, Room 116", email: "nisha.bhat@mce.edu", performance: 72, color: "#d4a44e" },
+      { name: "Embedded", code: "EC205", faculty: "Dr. Ramesh Gowda", designation: "Professor, Department of Electronics", post: "Embedded Lab Head", room: "Embedded Systems Lab", email: "ramesh.gowda@mce.edu", performance: 65, color: "#7866d7" },
+      { name: "VLSI", code: "EC207", faculty: "Prof. Charan Kulkarni", designation: "Assistant Professor, Department of Electronics", post: "Design Verification Mentor", room: "ECE Block, Room 124", email: "charan.kulkarni@mce.edu", performance: 62, color: "#88a889" }
+    ]
   },
-  {
-    category: "Adventure sports",
-    accent: "#d4a44e",
-    events: ["Rock-climbing wall event", "Trail trek expedition", "Kayaking camp circuit", "Cycling endurance ride", "Obstacle race camp"],
-    outcomes: ["Won", "Participated", "Lost", "Participated", "Won"]
+  "4MC23CS002": {
+    section: "B",
+    year: "Third Year",
+    address: "Bejai, Mangaluru, Karnataka",
+    studentPhone: "+91 98458 20611",
+    parentPhone: "+91 99861 33218",
+    lastSemester: { sem: 4, cgpa: 8.71 },
+    activities: [
+      { category: "club", event: "Analytics Club Modelathon", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Lead analyst", performance: 92, note: "Owned the inference dashboard and validation report." },
+      { category: "sports", event: "Campus Chess Open", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Top board", performance: 79, note: "Reached the final scoring table." },
+      { category: "cultural", event: "Data Storytelling Showcase", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Best presentation", performance: 88, note: "Won praise for clarity and visual narration." },
+      { category: "inter", event: "Inter College AI Case Challenge", college: "RVCE Bengaluru", place: "Bengaluru, Karnataka", level: "Winner", performance: 93, note: "Delivered the top-ranked solution pitch." },
+      { category: "intra", event: "Research Poster Day", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Gold poster", performance: 90, note: "High score in evidence quality and Q&A." }
+    ],
+    subjectDetails: [
+      { name: "Statistics", code: "DS301", faculty: "Prof. Anand Iyer", designation: "Associate Professor, School of Data Science", post: "Section B Faculty Advisor", room: "DS Wing, Room 204", email: "anand.iyer@mce.edu", performance: 90, color: "#1f7a72" },
+      { name: "Machine Learning", code: "DS303", faculty: "Dr. Leena Joseph", designation: "Professor, School of Data Science", post: "AI Lab Director", room: "AI Research Lab", email: "leena.joseph@mce.edu", performance: 93, color: "#d4a44e" },
+      { name: "Python", code: "DS305", faculty: "Prof. Sneha N", designation: "Assistant Professor, School of Data Science", post: "Programming Lab Coordinator", room: "DS Wing, Room 216", email: "sneha.n@mce.edu", performance: 91, color: "#7866d7" },
+      { name: "NLP", code: "DS307", faculty: "Dr. Farooq Ali", designation: "Associate Professor, School of Data Science", post: "Research Cell Convener", room: "DS Wing, Room 228", email: "farooq.ali@mce.edu", performance: 85, color: "#88a889" }
+    ]
   },
-  {
-    category: "Fitness training",
-    accent: "#c65a3f",
-    events: ["Strength and conditioning assessment", "Mobility and endurance block", "Functional training cycle", "Core stability evaluation", "Cardio endurance benchmark"],
-    outcomes: ["Participated", "Won", "Participated", "Lost", "Won"]
+  "4MC23CS003": {
+    section: "C",
+    year: "Third Year",
+    address: "Saraswathipuram, Mysuru, Karnataka",
+    studentPhone: "+91 97310 44826",
+    parentPhone: "+91 94821 11645",
+    lastSemester: { sem: 4, cgpa: 5.84 },
+    activities: [
+      { category: "club", event: "SAE Student Chapter Design Review", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Participant", performance: 59, note: "Needed support on documentation quality." },
+      { category: "sports", event: "Mechanical Cricket League", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Playing squad", performance: 61, note: "Steady fielding and attendance." },
+      { category: "cultural", event: "Street Play Collective", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Volunteer performer", performance: 57, note: "Helped backstage and stage transitions." },
+      { category: "inter", event: "Workshop Skill Challenge", college: "BMS College of Engineering", place: "Bengaluru, Karnataka", level: "Participant", performance: 54, note: "Completed the machine-fit assembly round." },
+      { category: "intra", event: "Thermodynamics Quiz League", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Shortlist", performance: 60, note: "Recovered in the oral response segment." }
+    ],
+    subjectDetails: [
+      { name: "Thermodynamics", code: "ME301", faculty: "Dr. Neel Bhat", designation: "Professor, Department of Mechanical Engineering", post: "Section C Faculty Advisor", room: "Mechanical Block, Room 210", email: "neel.bhat@mce.edu", performance: 55, color: "#c65a3f" },
+      { name: "Manufacturing", code: "ME303", faculty: "Prof. Harsha M", designation: "Assistant Professor, Department of Mechanical Engineering", post: "Workshop Coordinator", room: "Manufacturing Lab", email: "harsha.m@mce.edu", performance: 63, color: "#d4a44e" },
+      { name: "CAD", code: "ME305", faculty: "Prof. Sudeep Rao", designation: "Associate Professor, Department of Mechanical Engineering", post: "CAD Lab Incharge", room: "CAD Studio", email: "sudeep.rao@mce.edu", performance: 57, color: "#7866d7" },
+      { name: "Materials", code: "ME307", faculty: "Dr. Poonam Shetty", designation: "Assistant Professor, Department of Mechanical Engineering", post: "Materials Lab Coordinator", room: "Mechanical Block, Room 118", email: "poonam.shetty@mce.edu", performance: 52, color: "#88a889" }
+    ]
+  },
+  "4MC23CS005": {
+    section: "A",
+    year: "Third Year",
+    address: "Vidyanagar, Hubballi, Karnataka",
+    studentPhone: "+91 98867 54102",
+    parentPhone: "+91 97418 22836",
+    lastSemester: { sem: 4, cgpa: 8.48 },
+    activities: [
+      { category: "club", event: "BioInnovation Journal Circle", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Co presenter", performance: 89, note: "Presented a clear literature review summary." },
+      { category: "sports", event: "Kho Kho Meet", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Main squad", performance: 76, note: "Strong recovery and pace in closing rounds." },
+      { category: "cultural", event: "Green Campus Folk Arts", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Performer", performance: 84, note: "Participated in the themed cultural segment." },
+      { category: "inter", event: "National Biotech Quiz Day", college: "JSS Science and Technology University", place: "Mysuru, Karnataka", level: "Runner-up", performance: 91, note: "Finished second after the final oral round." },
+      { category: "intra", event: "Lab Research Poster Showcase", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Winner", performance: 88, note: "Strong technical clarity and poster flow." }
+    ],
+    subjectDetails: [
+      { name: "Genetics", code: "BT301", faculty: "Dr. Alok Menon", designation: "Professor, Department of Biotechnology", post: "Section A Faculty Advisor", room: "Biotech Block, Room 201", email: "alok.menon@mce.edu", performance: 91, color: "#1f7a72" },
+      { name: "Microbiology", code: "BT303", faculty: "Prof. Varsha Pai", designation: "Assistant Professor, Department of Biotechnology", post: "Microbiology Lab Coordinator", room: "Biotech Lab 2", email: "varsha.pai@mce.edu", performance: 89, color: "#d4a44e" },
+      { name: "Biochemistry", code: "BT305", faculty: "Dr. Neha Kulkarni", designation: "Associate Professor, Department of Biotechnology", post: "Academic Council Member", room: "Biotech Block, Room 214", email: "neha.kulkarni@mce.edu", performance: 84, color: "#7866d7" },
+      { name: "Immunology", code: "BT307", faculty: "Prof. Ritu Sharma", designation: "Assistant Professor, Department of Biotechnology", post: "Research Mentor", room: "Biotech Block, Room 219", email: "ritu.sharma@mce.edu", performance: 87, color: "#88a889" }
+    ]
+  },
+  "4MC23CS006": {
+    section: "B",
+    year: "Third Year",
+    address: "Kuvempunagar, Hassan, Karnataka",
+    studentPhone: "+91 98443 65017",
+    parentPhone: "+91 99016 22951",
+    lastSemester: { sem: 4, cgpa: 7.18 },
+    activities: [
+      { category: "club", event: "Manufacturing Society Tooling Meet", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Core volunteer", performance: 78, note: "Supported demo setup and tool calibration." },
+      { category: "sports", event: "Basketball League", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Team rotation", performance: 74, note: "Reliable practice attendance and defensive play." },
+      { category: "cultural", event: "Kannada Literary Circle", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Reader", performance: 72, note: "Participated in recital and discussion." },
+      { category: "inter", event: "CAD Modelling Contest", college: "SDM College of Engineering", place: "Dharwad, Karnataka", level: "Participant", performance: 76, note: "Reached the timed modelling round." },
+      { category: "intra", event: "Workshop Precision Challenge", college: "MCE Hassan", place: "Hassan, Karnataka", level: "Top scorer", performance: 81, note: "High marks in accuracy and finish quality." }
+    ],
+    subjectDetails: [
+      { name: "Thermodynamics", code: "ME301", faculty: "Dr. Neel Bhat", designation: "Professor, Department of Mechanical Engineering", post: "Section B Faculty Advisor", room: "Mechanical Block, Room 210", email: "neel.bhat@mce.edu", performance: 70, color: "#c65a3f" },
+      { name: "Manufacturing", code: "ME303", faculty: "Prof. Harsha M", designation: "Assistant Professor, Department of Mechanical Engineering", post: "Workshop Coordinator", room: "Manufacturing Lab", email: "harsha.m@mce.edu", performance: 71, color: "#d4a44e" },
+      { name: "CAD", code: "ME305", faculty: "Prof. Sudeep Rao", designation: "Associate Professor, Department of Mechanical Engineering", post: "CAD Lab Incharge", room: "CAD Studio", email: "sudeep.rao@mce.edu", performance: 74, color: "#7866d7" },
+      { name: "Materials", code: "ME307", faculty: "Dr. Poonam Shetty", designation: "Assistant Professor, Department of Mechanical Engineering", post: "Materials Lab Coordinator", room: "Mechanical Block, Room 118", email: "poonam.shetty@mce.edu", performance: 69, color: "#88a889" }
+    ]
   }
-];
-
-const outcomeBands = {
-  Won: [84, 96],
-  Participated: [68, 83],
-  Lost: [51, 67]
 };
 
-function percentageForOutcome(result, seed) {
-  const [min, max] = outcomeBands[result];
-  return min + (seed % (max - min + 1));
-}
-
-function buildSportsRecord(index) {
-  return sportsCatalog.map((sport, sportIndex) => {
-    const event = sport.events[(index + sportIndex) % sport.events.length];
-    const result = sport.outcomes[(index * 2 + sportIndex) % sport.outcomes.length];
-    const percentage = percentageForOutcome(result, index * 7 + sportIndex * 5);
-    const summary = result === "Won"
-      ? `Participated in ${event} and won the event with a ${percentage}% performance score.`
-      : result === "Lost"
-      ? `Participated in ${event} and lost after a competitive finish with ${percentage}% performance.`
-      : `Participated in ${event} and completed the event with ${percentage}% performance.`;
-
-    return {
-      category: sport.category,
-      event,
-      summary,
-      percentage,
-      result,
-      accent: sport.accent
-    };
-  });
-}
-
-const sportsAchievements = Object.fromEntries(students.map((student, index) => [student.id, buildSportsRecord(index)]));
-
-students.forEach(student => {
-  student.sports = sportsAchievements[student.id] || [];
-});
+students.forEach(student => Object.assign(student, studentExtensions[student.id]));
 
 const ranges = {
   "30d": {
@@ -1840,14 +1839,13 @@ const ranges = {
   }
 };
 
-Object.values(ranges).forEach(range => {
-  range.learners = students.length;
-});
-
 const arcLen = 2 * Math.PI * 86;
 let rangeKey = "30d";
 let filterKey = "all";
 let activeId = students[0].id;
+let activityFilter = "all";
+let activityHoverIndex = -1;
+let activityBars = [];
 let shown = { learners: 0, ready: 0, attendance: 0, moves: 0 };
 
 const fmt = {
@@ -1866,6 +1864,12 @@ const riskClass = risk => risk < 25 ? "low" : risk < 60 ? "medium" : "high";
 const badgeClass = status => status === "on-track" ? "badge-ok" : status === "watchlist" ? "badge-mid" : "badge-hi";
 const avatarBg = status => status === "critical" ? "linear-gradient(135deg,#c65a3f,#d4a44e)" : status === "watchlist" ? "linear-gradient(135deg,#d4a44e,#7866d7)" : "linear-gradient(135deg,#1f7a72,#88a889)";
 const isStudentMode = () => document.body.classList.contains("student-mode");
+const activityLabels = { all: "All activities", club: "Student club", sports: "Sports", cultural: "Cultural", inter: "Inter-college", intra: "Intra-college" };
+const activityPalette = { club: "#1f7a72", sports: "#d4a44e", cultural: "#7866d7", inter: "#c65a3f", intra: "#88a889" };
+const filteredActivities = student => activityFilter === "all" ? student.activities : student.activities.filter(item => item.category === activityFilter);
+const averagePerformance = items => items.length ? Math.round(items.reduce((sum, item) => sum + item.performance, 0) / items.length) : 0;
+const performanceBadge = value => value >= 85 ? "badge-ok" : value >= 70 ? "badge-mid" : "badge-hi";
+const shortLabel = text => text.split(" ").slice(0, 2).join(" ");
 
 function tickClock() {
   const now = new Date();
@@ -2103,6 +2107,220 @@ function drawChart() {
   $("cEngage").textContent = range.eng;
 }
 
+function drawActivityChart() {
+  const canvas = $("activityChart");
+  if (!canvas) {
+    return;
+  }
+
+  const width = canvas.clientWidth;
+  if (!width) {
+    return;
+  }
+
+  const ctx = canvas.getContext("2d");
+  const dpr = window.devicePixelRatio || 1;
+  const height = 280;
+  const student = activeStudent();
+  const activities = filteredActivities(student);
+  const pad = { t: 24, r: 18, b: 56, l: 42 };
+  const chartWidth = width - pad.l - pad.r;
+  const chartHeight = height - pad.t - pad.b;
+
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+  activityBars = [];
+
+  [0, 25, 50, 75, 100].forEach(value => {
+    const y = pad.t + chartHeight - (value / 100) * chartHeight;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(width - pad.r, y);
+    ctx.strokeStyle = "rgba(31, 42, 55, 0.08)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = "#758090";
+    ctx.font = "12px IBM Plex Mono";
+    ctx.textAlign = "right";
+    ctx.fillText(`${value}%`, pad.l - 8, y + 4);
+  });
+
+  if (!activities.length) {
+    return;
+  }
+
+  const slotWidth = chartWidth / activities.length;
+  const baseY = pad.t + chartHeight;
+
+  activities.forEach((item, index) => {
+    const barWidth = Math.min(58, slotWidth * 0.58);
+    const x = pad.l + slotWidth * index + (slotWidth - barWidth) / 2;
+    const y = pad.t + chartHeight - (item.performance / 100) * chartHeight;
+    const hovered = index === activityHoverIndex;
+    const gradient = ctx.createLinearGradient(0, y, 0, baseY);
+    gradient.addColorStop(0, activityPalette[item.category] || "#1f7a72");
+    gradient.addColorStop(1, "rgba(255,255,255,0.18)");
+    ctx.fillStyle = gradient;
+    if (ctx.roundRect) {
+      ctx.beginPath();
+      ctx.roundRect(x, y, barWidth, baseY - y, 16);
+      ctx.fill();
+    } else {
+      ctx.fillRect(x, y, barWidth, baseY - y);
+    }
+
+    if (hovered) {
+      ctx.strokeStyle = "rgba(31, 42, 55, 0.18)";
+      ctx.lineWidth = 2;
+      if (ctx.roundRect) {
+        ctx.beginPath();
+        ctx.roundRect(x, y, barWidth, baseY - y, 16);
+        ctx.stroke();
+      } else {
+        ctx.strokeRect(x, y, barWidth, baseY - y);
+      }
+    }
+
+    ctx.fillStyle = "#1f2a37";
+    ctx.font = "700 12px IBM Plex Mono";
+    ctx.textAlign = "center";
+    ctx.fillText(`${item.performance}%`, x + barWidth / 2, y - 10);
+
+    ctx.fillStyle = "#758090";
+    ctx.font = "11px IBM Plex Mono";
+    ctx.fillText(shortLabel(item.event), x + barWidth / 2, baseY + 18);
+
+    activityBars.push({ x, y, width: barWidth, baseY, item });
+  });
+}
+
+function updateActivityTooltip(index) {
+  const tooltip = $("activityTooltip");
+  const canvas = $("activityChart");
+  if (!tooltip || !canvas) {
+    return;
+  }
+
+  if (index < 0 || !activityBars[index]) {
+    tooltip.classList.remove("show");
+    return;
+  }
+
+  const bar = activityBars[index];
+  const item = bar.item;
+  const left = Math.min(Math.max(bar.x + bar.width / 2, 120), canvas.clientWidth - 120);
+  tooltip.innerHTML = `
+    <strong>${item.event}</strong>
+    <span>${activityLabels[item.category]} - ${item.performance}% - ${item.level}</span>
+    <span>${item.college}</span>
+    <span>${item.place}</span>
+  `;
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${bar.y}px`;
+  tooltip.classList.add("show");
+}
+
+function renderPerformanceProfile() {
+  const student = activeStudent();
+  const activities = filteredActivities(student);
+  const average = averagePerformance(activities);
+  $("activitySummary").textContent = `${student.name} has ${student.activities.length} tracked activities. ${activityLabels[activityFilter]} average is ${average}%. Hover the graph to inspect event, college, and place.`;
+  $("activityList").innerHTML = activities.map(item => `
+    <div class="activity-card">
+      <div class="activity-header">
+        <div>
+          <small>${activityLabels[item.category]}</small>
+          <strong>${item.event}</strong>
+          <span>${item.note}</span>
+        </div>
+        <div class="pill ${performanceBadge(item.performance)}">${item.performance}%</div>
+      </div>
+      <div class="activity-meta">
+        <div>
+          <small>College</small>
+          <strong>${item.college}</strong>
+          <span>${item.place}</span>
+        </div>
+        <div>
+          <small>Result</small>
+          <strong>${item.level}</strong>
+          <span>${item.performance}% performance score</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderProfileCard() {
+  const student = activeStudent();
+  $("profileSummary").textContent = `${student.name} is in Section ${student.section}, ${student.year}, and recorded ${student.lastSemester.cgpa.toFixed(2)} CGPA in Semester ${student.lastSemester.sem}.`;
+  $("identityGrid").innerHTML = [
+    ["Department", student.dept, `${student.id} institutional record`],
+    ["Section", `Section ${student.section}`, `${student.year}`],
+    ["Address", student.address, "Karnataka residential record"],
+    ["Last Semester CGPA", student.lastSemester.cgpa.toFixed(2), `Semester ${student.lastSemester.sem}`]
+  ].map(item => `
+    <div class="info-card">
+      <small>${item[0]}</small>
+      <strong>${item[1]}</strong>
+      <span>${item[2]}</span>
+    </div>
+  `).join("");
+  $("contactGrid").innerHTML = [
+    ["Student Contact", student.studentPhone, "Primary learner mobile"],
+    ["Parent Contact", student.parentPhone, "Guardian contact number"],
+    ["Mentor", student.mentor, student.mentorNote],
+    ["Status", statusLabel(student.status), `${student.attendance}% attendance and ${student.ready} readiness`]
+  ].map(item => `
+    <div class="contact-card">
+      <small>${item[0]}</small>
+      <strong>${item[1]}</strong>
+      <span>${item[2]}</span>
+    </div>
+  `).join("");
+}
+
+function renderFacultyList() {
+  const student = activeStudent();
+  $("facultySummary").textContent = `${student.subjectDetails.length} subject allocations are listed for Section ${student.section}. Each card includes the allotted professor, designation, post, room, and contact.`;
+  $("facultyList").innerHTML = student.subjectDetails.map(subject => `
+    <div class="faculty-card">
+      <div class="faculty-top">
+        <div>
+          <small>${subject.code}</small>
+          <strong>${subject.name}</strong>
+          <span>Section ${student.section} - ${student.year}</span>
+        </div>
+        <div class="pill ${performanceBadge(subject.performance)}">${subject.performance}%</div>
+      </div>
+      <div class="faculty-grid">
+        <div>
+          <small>Professor</small>
+          <strong>${subject.faculty}</strong>
+          <span>${subject.designation}</span>
+        </div>
+        <div>
+          <small>Post</small>
+          <strong>${subject.post}</strong>
+          <span>${subject.room}</span>
+        </div>
+        <div>
+          <small>Faculty Contact</small>
+          <strong>${subject.email}</strong>
+          <span>${student.dept} department allocation</span>
+        </div>
+        <div>
+          <small>Section and Year</small>
+          <strong>Section ${student.section}</strong>
+          <span>${student.year}</span>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
 function renderSpot() {
   const student = activeStudent();
   $("spot").innerHTML = `
@@ -2110,7 +2328,7 @@ function renderSpot() {
       <div class="avatar" style="background:${avatarBg(student.status)}">${initials(student.name)}</div>
       <div>
         <h4>${student.name}</h4>
-        <p>${student.dept} - ${student.id}</p>
+        <p>${student.dept} - ${student.id} - Section ${student.section} - ${student.year}</p>
         <div class="pill ${badgeClass(student.status)}">${statusLabel(student.status)}</div>
       </div>
     </div>
@@ -2125,23 +2343,12 @@ function renderSpot() {
       <div class="mini"><small>Prediction</small><strong>${student.pred}</strong></div>
       <div class="mini"><small>Risk</small><strong>${student.risk}%</strong></div>
     </div>
-    <div class="tags">${student.tags.map(tag => `<div class="tag">${tag}</div>`).join("")}</div>
-    <div>
-      <div class="eyebrow">Sports achievements</div>
-      <div class="sports-grid">
-        ${student.sports.map(sport => `
-          <div class="sports-card" style="--sport-accent:${sport.accent}">
-            <small>${sport.category}</small>
-            <strong>${sport.event}</strong>
-            <p>${sport.summary}</p>
-            <div class="sports-meta">
-              <div class="sports-score">${sport.percentage}%</div>
-              <span class="sports-result">${sport.result}</span>
-            </div>
-          </div>
-        `).join("")}
-      </div>
+    <div class="profile-band">
+      <div class="mini"><small>Section</small><strong>${student.section}</strong></div>
+      <div class="mini"><small>Year</small><strong>${student.year}</strong></div>
+      <div class="mini"><small>Last Sem CGPA</small><strong>Sem ${student.lastSemester.sem} - ${student.lastSemester.cgpa.toFixed(2)}</strong></div>
     </div>
+    <div class="tags">${student.tags.map(tag => `<div class="tag">${tag}</div>`).join("")}</div>
     <div><div class="eyebrow">Next best action</div><p class="note">${student.action}</p></div>
     <div>
       <div class="eyebrow">Subject shape</div>
@@ -2188,18 +2395,6 @@ function renderPlanner() {
       <span>${slot[2]}</span>
     </div>
   `).join("");
-}
-
-function syncDemoAccounts() {
-  document.querySelectorAll(".demo-chip").forEach((button, index) => {
-    const student = students[index];
-    if (!student) {
-      return;
-    }
-    button.dataset.usn = student.id;
-    button.dataset.dob = student.dob;
-    button.innerHTML = `<strong>${student.name}</strong><span>${student.id} - ${student.dob}</span>`;
-  });
 }
 
 function renderTable() {
@@ -2250,7 +2445,11 @@ function renderAll() {
   renderSpot();
   renderActions();
   renderPlanner();
+  renderPerformanceProfile();
+  renderProfileCard();
+  renderFacultyList();
   drawChart();
+  drawActivityChart();
 }
 
 function loginStudent(student) {
@@ -2321,6 +2520,18 @@ $("search").addEventListener("input", () => {
   renderTable();
 });
 
+document.querySelectorAll(".activity-filter").forEach(button => {
+  button.addEventListener("click", () => {
+    activityFilter = button.dataset.activity;
+    activityHoverIndex = -1;
+    document.querySelectorAll(".activity-filter").forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+    renderPerformanceProfile();
+    drawActivityChart();
+    updateActivityTooltip(-1);
+  });
+});
+
 $("nextBtn").addEventListener("click", () => {
   if (isStudentMode()) {
     logoutStudent();
@@ -2337,6 +2548,25 @@ $("nextBtn").addEventListener("click", () => {
 });
 
 window.addEventListener("resize", drawChart);
+window.addEventListener("resize", drawActivityChart);
+
+$("activityChart").addEventListener("mousemove", event => {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const index = activityBars.findIndex(bar => x >= bar.x && x <= bar.x + bar.width && y >= bar.y && y <= bar.baseY);
+  if (index !== activityHoverIndex) {
+    activityHoverIndex = index;
+    drawActivityChart();
+  }
+  updateActivityTooltip(index);
+});
+
+$("activityChart").addEventListener("mouseleave", () => {
+  activityHoverIndex = -1;
+  drawActivityChart();
+  updateActivityTooltip(-1);
+});
 
 document.addEventListener("pointermove", event => {
   document.documentElement.style.setProperty("--px", `${(event.clientX / window.innerWidth) * 100}%`);
@@ -2354,8 +2584,6 @@ $("loginForm").addEventListener("submit", event => {
   }
   loginStudent(student);
 });
-
-syncDemoAccounts();
 
 document.querySelectorAll(".demo-chip").forEach(button => {
   button.addEventListener("click", () => {
